@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Criminal Intent</string>
+    <string name="crime_title_label">Tytuł:</string>
+    <string name="crime_title_hint">Podaj tytuł sprawy</string>
+    <string name="crime_details_label">Czas zgłoszenia:</string>
+    <string name="crime_details_descr">Data i czas zgłoszenia</string>
+    <string name="crime_solved">Sprawa rozwiązana</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="call_police">Wezwij policję</string>
+</resources>
