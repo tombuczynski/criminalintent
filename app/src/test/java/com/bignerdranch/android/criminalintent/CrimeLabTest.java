@@ -21,7 +21,6 @@ public class CrimeLabTest {
     @Before
     public void setUp() {
         mCrimeLab = CrimeLab.getCrimeLab();
-        mCrimeLab.populateCrimeList(100);
     }
 
     @Test
@@ -29,7 +28,7 @@ public class CrimeLabTest {
 
         List<Crime> crimeList = mCrimeLab.getCrimeList();
         assertNotNull(crimeList);
-        assertEquals("List size:", 100, crimeList.size());
+//        assertEquals("List size:", 100, crimeList.size());
         mCrimeLab.populateCrimeList(200);
         assertEquals("List size:", 200, crimeList.size());
 

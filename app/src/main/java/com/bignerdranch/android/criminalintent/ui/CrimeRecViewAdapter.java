@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import com.bignerdranch.android.criminalintent.R;
 import com.bignerdranch.android.criminalintent.data.Crime;
 
+import java.text.DateFormat;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -29,12 +31,14 @@ public class CrimeRecViewAdapter extends RecyclerView.Adapter<CrimeRecViewAdapte
 
       protected final TextView mTextViewTitle;
       protected final TextView mtextViewDateTime;
+      protected final ImageView mImageViewSolved;
 
       public ViewHolderCrime(@NonNull View itemView) {
          super(itemView);
 
          mTextViewTitle = itemView.findViewById(R.id.textViewTitle);
          mtextViewDateTime = itemView.findViewById(R.id.textViewDateTime);
+         mImageViewSolved = itemView.findViewById(R.id.imageViewSolved);
 
          itemView.setOnClickListener(this);
          //itemView.setLongClickable(true);
@@ -43,7 +47,9 @@ public class CrimeRecViewAdapter extends RecyclerView.Adapter<CrimeRecViewAdapte
 
       public void updateUI(Crime crime) {
          mTextViewTitle.setText(crime.getTitle());
-         mtextViewDateTime.setText(String.format("%tc", crime.getDate()));
+         DateFormat df = DateFormat.getDateInstance(DateFormat.FULL);
+         mtextViewDateTime.setText(df.format(crime.getDate()));
+         mImageViewSolved.setVisibility(crime.isSolved() ? View.VISIBLE : View.INVISIBLE);
       }
 
       protected void showToast(CharSequence msg) {
@@ -52,7 +58,7 @@ public class CrimeRecViewAdapter extends RecyclerView.Adapter<CrimeRecViewAdapte
 
       @Override
       public void onClick(View itemView) {
-         int pos = getAdapterPosition();
+         //int pos = getAdapterPosition();
 
          showToast("Wybrane: " + mTextViewTitle.getText());
       }
@@ -70,12 +76,7 @@ public class CrimeRecViewAdapter extends RecyclerView.Adapter<CrimeRecViewAdapte
          super(itemView);
 
          Button b = itemView.findViewById(R.id.buttonCallPolice);
-         b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               showToast("Policja wezwana dla: " + mTextViewTitle.getText());
-            }
-         });
+         b.setOnClickListener(v -> showToast("Policja wezwana dla: " + mTextViewTitle.getText()));
       }
    }
 

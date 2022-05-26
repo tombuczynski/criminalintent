@@ -3,17 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="?attr/selectableItemBackground"
-    android:paddingStart="5dp"
-    android:paddingTop="5dp"
-    android:paddingEnd="5dp"
-    android:paddingBottom="7dp">
+    android:paddingStart="16dp"
+    android:paddingTop="16dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="8dp">
 
     <TextView
         android:id="@id/textViewTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="16sp"
         android:textStyle="bold"
         tools:text="Tytuł" />
 
@@ -23,9 +25,26 @@
         android:layout_height="wrap_content"
         tools:text="Czas zgłoszenia" />
 
-    <Button
-        android:id="@+id/buttonCallPolice"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/call_police" />
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/buttonCallPolice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/call_police" />
+
+        <ImageView
+            android:id="@+id/imageViewSolved"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:contentDescription="@string/crime_solved"
+            android:scaleType="fitEnd"
+            app:srcCompat="@drawable/ic_solved" />
+
+    </LinearLayout>
 </LinearLayout>

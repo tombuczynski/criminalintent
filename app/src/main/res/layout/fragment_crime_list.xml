@@ -7,6 +7,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/crimeListRecView"
+        tools:listitem="@layout/list_item_crime"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
