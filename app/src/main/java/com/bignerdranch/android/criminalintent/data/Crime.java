@@ -57,7 +57,7 @@ public class Crime {
         mSolved = solved;
     }
 
-    public boolean getRequiresPolice() {
+    public boolean isRequiresPolice() {
         return mRequiresPolice;
     }
     public void setRequiresPolice(boolean requiresPolice) {

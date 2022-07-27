@@ -1,5 +1,7 @@
 package com.bignerdranch.android.criminalintent.ui;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +11,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bignerdranch.android.criminalintent.CrimeActivity;
 import com.bignerdranch.android.criminalintent.R;
 import com.bignerdranch.android.criminalintent.data.Crime;
+import com.bignerdranch.android.criminalintent.data.CrimeLab;
 
 import java.text.DateFormat;
 import java.util.List;
+import java.util.UUID;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,11 +28,11 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class CrimeRecViewAdapter extends RecyclerView.Adapter<CrimeRecViewAdapter.ViewHolderCrime> {
 
-   public CrimeRecViewAdapter(List<Crime> crimes) {
-      mCrimes = crimes;
+   public CrimeRecViewAdapter(CrimeViewModel viewModel) {
+      mViewModel = viewModel;
    }
 
-   public static class ViewHolderCrime extends RecyclerView.ViewHolder implements  View.OnClickListener, View.OnLongClickListener {
+   public class ViewHolderCrime extends RecyclerView.ViewHolder implements  View.OnClickListener, View.OnLongClickListener {
 
       protected final TextView mTextViewTitle;
       protected final TextView mtextViewDateTime;
@@ -41,11 +46,10 @@ public class CrimeRecViewAdapter extends RecyclerView.Adapter<CrimeRecViewAdapte
          mImageViewSolved = itemView.findViewById(R.id.imageViewSolved);
 
          itemView.setOnClickListener(this);
-         //itemView.setLongClickable(true);
-         itemView.setOnLongClickListener(this);
+         //itemView.setOnLongClickListener(this);
       }
 
-      public void updateUI(Crime crime) {
+      public void bind(Crime crime) {
          mTextViewTitle.setText(crime.getTitle());
          DateFormat df = DateFormat.getDateInstance(DateFormat.FULL);
          mtextViewDateTime.setText(df.format(crime.getDate()));
@@ -60,7 +64,9 @@ public class CrimeRecViewAdapter extends RecyclerView.Adapter<CrimeRecViewAdapte
       public void onClick(View itemView) {
          //int pos = getAdapterPosition();
 
-         showToast("Wybrane: " + mTextViewTitle.getText());
+         //showToast("Wybrane: " + mTextViewTitle.getText());
+
+         mViewModel.setSelectedItemPos(getAdapterPosition());
       }
 
       @Override
@@ -70,17 +76,17 @@ public class CrimeRecViewAdapter extends RecyclerView.Adapter<CrimeRecViewAdapte
       }
    }
 
-   public static class ViewHolderCrimePolice extends ViewHolderCrime {
+   public class ViewHolderCrimePolice extends ViewHolderCrime {
 
       public ViewHolderCrimePolice(@NonNull View itemView) {
          super(itemView);
 
-         Button b = itemView.findViewById(R.id.buttonCallPolice);
-         b.setOnClickListener(v -> showToast("Policja wezwana dla: " + mTextViewTitle.getText()));
+         Button button = itemView.findViewById(R.id.buttonCallPolice);
+         button.setOnClickListener(v -> showToast("Policja wezwana dla: " + mTextViewTitle.getText()));
       }
    }
 
-   private final List<Crime> mCrimes;
+   private final CrimeViewModel mViewModel;
 
    /**
     * Called when RecyclerView needs a new {@link ViewHolderCrime} of the given type to represent
@@ -133,7 +139,7 @@ public class CrimeRecViewAdapter extends RecyclerView.Adapter<CrimeRecViewAdapte
     */
    @Override
    public void onBindViewHolder(@NonNull ViewHolderCrime holder, int position) {
-      holder.updateUI(mCrimes.get(position));
+      holder.bind(mViewModel.getCrimeList().get(position));
    }
 
    /**
@@ -150,7 +156,7 @@ public class CrimeRecViewAdapter extends RecyclerView.Adapter<CrimeRecViewAdapte
     */
    @Override
    public int getItemViewType(int position) {
-      return mCrimes.get(position).getRequiresPolice() ? R.layout.list_item_crime_police : R.layout.list_item_crime;
+      return mViewModel.getCrimeList().get(position).isRequiresPolice() ? R.layout.list_item_crime_police : R.layout.list_item_crime;
    }
 
    /**
@@ -160,6 +166,6 @@ public class CrimeRecViewAdapter extends RecyclerView.Adapter<CrimeRecViewAdapte
     */
    @Override
    public int getItemCount() {
-      return mCrimes.size();
+      return mViewModel.getCrimeList().size();
    }
 }

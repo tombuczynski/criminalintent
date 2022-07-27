@@ -1,29 +1,44 @@
 package com.bignerdranch.android.criminalintent.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bignerdranch.android.criminalintent.CrimeActivity;
 import com.bignerdranch.android.criminalintent.databinding.FragmentCrimeBinding;
 
 import org.jetbrains.annotations.Contract;
 
+import java.util.UUID;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.Observable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 public class CrimeFragment extends Fragment {
 
     private static final String TAG = "CrimeFragment";
+
+    public static final String ARG_CRIME_ID = "crime_id";
+
     private CrimeViewModel mViewModel;
-    private FragmentCrimeBinding mBinding;
+    private FragmentCrimeBinding b;
 
     @NonNull
     @Contract(" -> new")
     public static CrimeFragment newInstance() {
         return new CrimeFragment();
+    }
+
+    public static Bundle prepareArgs(UUID crime_id) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ARG_CRIME_ID, crime_id);
+
+        return bundle;
     }
 
     @Override
@@ -38,25 +53,30 @@ public class CrimeFragment extends Fragment {
 
         mViewModel = new ViewModelProvider(requireActivity()).get(CrimeViewModel.class);
 
-        mBinding = FragmentCrimeBinding.inflate(inflater, container, false);
-        mBinding.setCrime(mViewModel.getCrimes().get(0));
+        b = FragmentCrimeBinding.inflate(inflater, container, false);
 
-        //mBinding.setLifecycleOwner(this);
+//        Intent intent = requireActivity().getIntent();
+//        UUID id = (UUID)intent.getSerializableExtra(CrimeActivity.EXTRA_CRIME_ID);
 
-        return mBinding.getRoot();
+        UUID id = (UUID)requireArguments().getSerializable(ARG_CRIME_ID);
+        b.setCrime(mViewModel.getCrime(id));
+
+        //b.setLifecycleOwner(this);
+
+        return b.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mBinding.buttonDateTime.setEnabled(false);
+        b.buttonDateTime.setEnabled(false);
 
         handleViewEvents();
     }
 
     private void handleViewEvents() {
-        mBinding.buttonDateTime.setOnClickListener(v -> {
+        b.buttonDateTime.setOnClickListener(v -> {
 //            Log.d(TAG, "title = " + mCrime.getTitle());
 //            Log.d(TAG, "solved = " + mCrime.isSolved());
 //

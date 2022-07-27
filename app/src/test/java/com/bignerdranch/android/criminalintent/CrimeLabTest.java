@@ -51,5 +51,8 @@ public class CrimeLabTest {
 
         Crime cr3 = crimeList.get(48);
         assertNotEquals("The same ID of different items:", cr1.getId(), cr3.getId());
+
+        Crime cr4 = mCrimeLab.getCrime(UUID.randomUUID());
+        assertNull("Nonexistent UUID:", cr4);
     }
 }

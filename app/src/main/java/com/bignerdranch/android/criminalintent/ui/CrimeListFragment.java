@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Contract;
  */
 public class CrimeListFragment extends Fragment {
 
+    public CrimeRecViewAdapter mRecViewAdapter;
     private CrimeViewModel mViewModel;
     private RecyclerView mRecyclerViewCrimes;
 
@@ -37,11 +38,6 @@ public class CrimeListFragment extends Fragment {
     @Contract(" -> new")
     public static CrimeListFragment newInstance() {
         return new CrimeListFragment();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -62,7 +58,13 @@ public class CrimeListFragment extends Fragment {
 
         mRecyclerViewCrimes.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
-        CrimeRecViewAdapter recViewAdapter = new CrimeRecViewAdapter(mViewModel.getCrimes());
-        mRecyclerViewCrimes.setAdapter(recViewAdapter);
+        mRecViewAdapter = new CrimeRecViewAdapter(mViewModel);
+        mRecyclerViewCrimes.setAdapter(mRecViewAdapter);
+
+        mViewModel.getLastChangedItemPos().observe(getViewLifecycleOwner(), this::onLastChangedItemChanged);
+    }
+
+    private void onLastChangedItemChanged(Integer itemPos) {
+        mRecViewAdapter.notifyItemChanged(itemPos);
     }
 }

@@ -14,6 +14,7 @@ public abstract class FragmentContainerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_fragment_container);
 
         if (savedInstanceState == null) {
@@ -26,9 +27,11 @@ public abstract class FragmentContainerActivity extends AppCompatActivity {
 
         fragMan.beginTransaction()
                 .setReorderingAllowed(true)
-                .add(containerId, fragmentClass, null)
+                .add(containerId, fragmentClass, getArgs())
                 .commit();
     }
 
     protected abstract Class<? extends Fragment> getFragmentClass();
+
+    protected Bundle getArgs() {return null;}
 }

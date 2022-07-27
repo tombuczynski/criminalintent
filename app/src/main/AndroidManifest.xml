@@ -19,7 +19,10 @@
         </activity>
         <activity
             android:name=".CrimeActivity"
+            android:label="@string/crime_details"
             android:exported="false">
+<!--            android:parentActivityName=".CrimeListActivity"-->
+<!--            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".CrimeListActivity"/>-->
         </activity>
     </application>
 
