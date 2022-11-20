@@ -1,21 +1,22 @@
 package com.bignerdranch.android.criminalintent.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bignerdranch.android.criminalintent.CrimeActivity;
+import com.bignerdranch.android.criminalintent.data.Crime;
 import com.bignerdranch.android.criminalintent.databinding.FragmentCrimeBinding;
 
 import org.jetbrains.annotations.Contract;
 
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.databinding.Observable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -23,10 +24,11 @@ public class CrimeFragment extends Fragment {
 
     private static final String TAG = "CrimeFragment";
 
-    public static final String ARG_CRIME_ID = "crime_id";
+    public static final String ARG_CRIME_ID = "CRIME_ID";
 
     private CrimeViewModel mViewModel;
     private FragmentCrimeBinding b;
+    private Crime mCrime;
 
     @NonNull
     @Contract(" -> new")
@@ -59,7 +61,9 @@ public class CrimeFragment extends Fragment {
 //        UUID id = (UUID)intent.getSerializableExtra(CrimeActivity.EXTRA_CRIME_ID);
 
         UUID id = (UUID)requireArguments().getSerializable(ARG_CRIME_ID);
-        b.setCrime(mViewModel.getCrime(id));
+        mCrime = mViewModel.getCrime(id);
+
+        b.setCrime(mCrime);
 
         //b.setLifecycleOwner(this);
 
@@ -73,6 +77,14 @@ public class CrimeFragment extends Fragment {
         b.buttonDateTime.setEnabled(false);
 
         handleViewEvents();
+
+        mCrime.isModified().observe(getViewLifecycleOwner(), modified -> {
+            if (modified) {
+                HashSet<UUID> modifiedItems = new HashSet<>();
+                modifiedItems.add(mCrime.getId());
+                mViewModel.setModifiedItems(modifiedItems);
+            }
+        });
     }
 
     private void handleViewEvents() {
@@ -84,6 +96,7 @@ public class CrimeFragment extends Fragment {
 //            mBinding.setCrime(mCrime);
 
         });
+
     }
 
 }

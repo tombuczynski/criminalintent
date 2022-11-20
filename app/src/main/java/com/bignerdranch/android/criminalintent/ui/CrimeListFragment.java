@@ -60,11 +60,9 @@ public class CrimeListFragment extends Fragment {
 
         mRecViewAdapter = new CrimeRecViewAdapter(mViewModel);
         mRecyclerViewCrimes.setAdapter(mRecViewAdapter);
-
-        mViewModel.getLastChangedItemPos().observe(getViewLifecycleOwner(), this::onLastChangedItemChanged);
     }
 
-    private void onLastChangedItemChanged(Integer itemPos) {
+    public void notifyItemChanged(int itemPos) {
         mRecViewAdapter.notifyItemChanged(itemPos);
     }
 }

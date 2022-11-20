@@ -33,7 +33,7 @@ public class CrimeLabTest {
         assertEquals("List size:", 200, crimeList.size());
 
         Crime cr = crimeList.get(49);
-        assertEquals("Title:", "Sprawa nr 50", cr.getTitle());
+        assertEquals("Title:", "Sprawa #50", cr.getTitle());
         assertFalse("Expected that crime status = not solved", cr.isSolved());
 
         cr = crimeList.get(42);

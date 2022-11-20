@@ -13,12 +13,7 @@ public class CrimeLab {
     private static CrimeLab sCrimeLab;
 
     private final List<Crime> mCrimeList;
-    private final Map<UUID, Crime> mCrimeMap;
-
-    private CrimeLab() {
-        mCrimeList = new ArrayList<>();
-        mCrimeMap =  new HashMap<>();
-    }
+    private final Map<UUID, Integer> mCrimeMap;
 
     public static CrimeLab getCrimeLab() {
         if (sCrimeLab == null) {
@@ -30,8 +25,18 @@ public class CrimeLab {
         return sCrimeLab;
     }
 
+    private CrimeLab() {
+        mCrimeList = new ArrayList<>();
+        mCrimeMap =  new HashMap<>();
+    }
+
     public List<Crime> getCrimeList() {
         return mCrimeList;
+    }
+
+    public int getCrimeItemPos(UUID id) {
+        Integer pos = mCrimeMap.get(id);
+        return pos != null ? pos : -1;
     }
 
     public Crime getCrime(UUID id) {
@@ -42,8 +47,8 @@ public class CrimeLab {
 //      }
 //
 //      return null;
-
-        return mCrimeMap.get(id);
+        int itemPos = getCrimeItemPos(id);
+        return itemPos >= 0 ? mCrimeList.get(itemPos) : null;
     }
 
     public void populateCrimeList(int cnt) {
@@ -51,13 +56,13 @@ public class CrimeLab {
         mCrimeMap.clear();
 
         for (int i = 0; i < cnt; i++) {
-            Crime cr = new Crime("Sprawa nr " + (i+1), (i % 3) == 0, (i % 10) == 5);
+            Crime cr = new Crime("Sprawa #" + (i+1), (i % 3) == 0, (i % 10) == 5);
             add(cr);
         }
     }
 
     public void add(Crime cr) {
+        mCrimeMap.put(cr.getId(), mCrimeList.size());
         mCrimeList.add(cr);
-        mCrimeMap.put(cr.getId(), cr);
     }
 }

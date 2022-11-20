@@ -28,10 +28,6 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class CrimeRecViewAdapter extends RecyclerView.Adapter<CrimeRecViewAdapter.ViewHolderCrime> {
 
-   public CrimeRecViewAdapter(CrimeViewModel viewModel) {
-      mViewModel = viewModel;
-   }
-
    public class ViewHolderCrime extends RecyclerView.ViewHolder implements  View.OnClickListener, View.OnLongClickListener {
 
       protected final TextView mTextViewTitle;
@@ -51,7 +47,7 @@ public class CrimeRecViewAdapter extends RecyclerView.Adapter<CrimeRecViewAdapte
 
       public void bind(Crime crime) {
          mTextViewTitle.setText(crime.getTitle());
-         DateFormat df = DateFormat.getDateInstance(DateFormat.FULL);
+         DateFormat df = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.SHORT);
          mtextViewDateTime.setText(df.format(crime.getDate()));
          mImageViewSolved.setVisibility(crime.isSolved() ? View.VISIBLE : View.INVISIBLE);
       }
@@ -86,7 +82,13 @@ public class CrimeRecViewAdapter extends RecyclerView.Adapter<CrimeRecViewAdapte
       }
    }
 
+
    private final CrimeViewModel mViewModel;
+
+   public CrimeRecViewAdapter(CrimeViewModel viewModel) {
+      mViewModel = viewModel;
+   }
+
 
    /**
     * Called when RecyclerView needs a new {@link ViewHolderCrime} of the given type to represent

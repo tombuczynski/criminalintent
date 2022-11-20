@@ -45,7 +45,7 @@
             android:id="@+id/buttonDateTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{String.format(&quot;%tc&quot;, crime.date)}"
+            android:text="@{java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.LONG, java.text.DateFormat.SHORT).format(crime.date)}"
             android:contentDescription="@string/crime_details_descr" />
 
         <CheckBox

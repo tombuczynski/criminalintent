@@ -34,4 +34,10 @@ public abstract class FragmentContainerActivity extends AppCompatActivity {
     protected abstract Class<? extends Fragment> getFragmentClass();
 
     protected Bundle getArgs() {return null;}
+
+    protected Fragment getFragment() {
+        FragmentManager fragMan = getSupportFragmentManager();
+
+        return fragMan.findFragmentById(R.id.fragment_container);
+    }
 }
