@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Contract;
  */
 public class CrimeListFragment extends Fragment {
 
-    public CrimeRecViewAdapter mRecViewAdapter;
+    public CrimeRecyclerViewAdapter mRecViewAdapter;
     private CrimeViewModel mViewModel;
     private RecyclerView mRecyclerViewCrimes;
 
@@ -54,11 +54,11 @@ public class CrimeListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mRecyclerViewCrimes = view.findViewById(R.id.crimeListRecView);
+        mRecyclerViewCrimes = view.findViewById(R.id.recyclerViewCrimeList);
 
         mRecyclerViewCrimes.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
-        mRecViewAdapter = new CrimeRecViewAdapter(mViewModel);
+        mRecViewAdapter = new CrimeRecyclerViewAdapter(mViewModel);
         mRecyclerViewCrimes.setAdapter(mRecViewAdapter);
     }
 

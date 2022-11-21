@@ -40,15 +40,6 @@ public class CrimeListActivity extends FragmentContainerActivity {
         mViewModel.getSelectedItemPos().observe(this, this::onSelItemChanged);
     }
 
-    private void startCrimeActivity(int itemPos) {
-        if (itemPos >= 0) {
-            Intent intent = new Intent(this, CrimeActivity.class);
-            intent.putExtra(CrimeActivity.EXTRA_CRIME_ID, mViewModel.getCrime(itemPos).getId());
-
-            mCrimeActivity.launch(intent);
-        }
-    }
-
     private void onSelItemChanged(Integer itemPos) {
         if (mCrimeItemPreselection) {
             if (itemPos >= 0) {
@@ -57,6 +48,17 @@ public class CrimeListActivity extends FragmentContainerActivity {
             mCrimeItemPreselection = false;
         } else {
             startCrimeActivity(itemPos);
+        }
+    }
+
+    private void startCrimeActivity(int itemPos) {
+        if (itemPos >= 0) {
+//            Intent intent = new Intent(this, CrimeActivity.class);
+//            intent.putExtra(CrimeActivity.EXTRA_CRIME_ID, mViewModel.getCrime(itemPos).getId());
+            Intent intent = new Intent(this, CrimePagerActivity.class);
+            intent.putExtra(CrimePagerActivity.EXTRA_CRIME_ID, mViewModel.getCrime(itemPos).getId());
+
+            mCrimeActivity.launch(intent);
         }
     }
 

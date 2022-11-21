@@ -9,6 +9,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CriminalIntent">
         <activity
+            android:name=".CrimePagerActivity"
+            android:exported="false"
+            android:label="@string/crime_details">
+
+        </activity>
+        <activity
             android:name=".CrimeListActivity"
             android:exported="true">
             <intent-filter>
@@ -19,10 +25,11 @@
         </activity>
         <activity
             android:name=".CrimeActivity"
-            android:label="@string/crime_details"
-            android:exported="false">
-<!--            android:parentActivityName=".CrimeListActivity"-->
-<!--            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".CrimeListActivity"/>-->
+            android:exported="false"
+            android:label="@string/crime_details">
+
+            <!-- android:parentActivityName=".CrimeListActivity" -->
+            <!-- <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".CrimeListActivity"/> -->
         </activity>
     </application>
 

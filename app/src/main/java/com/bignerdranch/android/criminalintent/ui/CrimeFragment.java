@@ -31,9 +31,10 @@ public class CrimeFragment extends Fragment {
     private Crime mCrime;
 
     @NonNull
-    @Contract(" -> new")
-    public static CrimeFragment newInstance() {
-        return new CrimeFragment();
+    public static CrimeFragment newInstance(UUID crime_id) {
+        CrimeFragment f = new CrimeFragment();
+        f.setArguments(prepareArgs(crime_id));
+        return f;
     }
 
     public static Bundle prepareArgs(UUID crime_id) {
@@ -80,9 +81,11 @@ public class CrimeFragment extends Fragment {
 
         mCrime.isModified().observe(getViewLifecycleOwner(), modified -> {
             if (modified) {
-                HashSet<UUID> modifiedItems = new HashSet<>();
-                modifiedItems.add(mCrime.getId());
-                mViewModel.setModifiedItems(modifiedItems);
+                HashSet<UUID> modifiedItems = mViewModel.getModifiedItems().getValue();
+                if (modifiedItems !=null) {
+                    modifiedItems.add(mCrime.getId());
+                    mViewModel.setModifiedItems(modifiedItems);
+                }
             }
         });
     }

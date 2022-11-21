@@ -1,7 +1,5 @@
 package com.bignerdranch.android.criminalintent.ui;
 
-import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +9,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bignerdranch.android.criminalintent.CrimeActivity;
 import com.bignerdranch.android.criminalintent.R;
 import com.bignerdranch.android.criminalintent.data.Crime;
-import com.bignerdranch.android.criminalintent.data.CrimeLab;
 
 import java.text.DateFormat;
-import java.util.List;
-import java.util.UUID;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 /**
  * Created by Tom Buczynski on 27.04.2022.
  */
-public class CrimeRecViewAdapter extends RecyclerView.Adapter<CrimeRecViewAdapter.ViewHolderCrime> {
+public class CrimeRecyclerViewAdapter extends RecyclerView.Adapter<CrimeRecyclerViewAdapter.ViewHolderCrime> {
 
    public class ViewHolderCrime extends RecyclerView.ViewHolder implements  View.OnClickListener, View.OnLongClickListener {
 
@@ -85,7 +79,7 @@ public class CrimeRecViewAdapter extends RecyclerView.Adapter<CrimeRecViewAdapte
 
    private final CrimeViewModel mViewModel;
 
-   public CrimeRecViewAdapter(CrimeViewModel viewModel) {
+   public CrimeRecyclerViewAdapter(CrimeViewModel viewModel) {
       mViewModel = viewModel;
    }
 

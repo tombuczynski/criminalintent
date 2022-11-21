@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="7dp"
+        android:padding="8dp"
         tools:context=".ui.CrimeFragment">
 
         <TextView
@@ -33,7 +33,10 @@
             android:selectAllOnFocus="true"
             android:text="@={crime.title}"
             android:textColorHint="?attr/colorSecondaryVariant"
-            tools:ignore="TextContrastCheck" />
+            tools:ignore="TextContrastCheck">
+        </EditText>
+
+
 
         <TextView
             style="?android:attr/listSeparatorTextViewStyle"
