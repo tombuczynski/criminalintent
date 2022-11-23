@@ -1,6 +1,7 @@
 package com.bignerdranch.android.criminalintent.ui;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,14 +23,14 @@ import androidx.fragment.app.DialogFragment;
 /**
  * Created by Tom Buczynski on 22.11.2022.
  */
-public class DatePickerDlgFragment extends DialogFragment {
+public class DatePickerDlgFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
     public static final String TAG = "DatePickerDlgFragment";
     public static final String REQUEST_DATE = "requestDate";
     public static final String RESULT_DATE = "resultDate";
 
     private static final String ARG_DATE = "date";
 
-    private DatePicker mDatePicker;
+//    private DatePicker mDatePicker;
 
     @NonNull
     @Override
@@ -42,29 +43,32 @@ public class DatePickerDlgFragment extends DialogFragment {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
 
-        configurePicker(v, cal);
+        return new DatePickerDialog(requireContext(), this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE));
 
-        return new AlertDialog.Builder(requireActivity())
-                .setTitle(R.string.crime_date_label)
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                    Calendar c = Calendar.getInstance();
-                    c.set(mDatePicker.getYear(), mDatePicker.getMonth(), mDatePicker.getDayOfMonth());
 
-                    Bundle bundle = new Bundle();
-                    Date d = c.getTime();
-                    bundle.putSerializable(RESULT_DATE, d);
-
-                    getParentFragmentManager().setFragmentResult(REQUEST_DATE, bundle);
-
-                })
-                .setView(v)
-                .create();
+//        configurePicker(v, cal);
+//
+//        return new AlertDialog.Builder(requireActivity())
+//                .setTitle(R.string.crime_date_label)
+//                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+//                    Calendar c = Calendar.getInstance();
+//                    c.set(mDatePicker.getYear(), mDatePicker.getMonth(), mDatePicker.getDayOfMonth());
+//
+//                    Bundle bundle = new Bundle();
+//                    Date d = c.getTime();
+//                    bundle.putSerializable(RESULT_DATE, d);
+//
+//                    getParentFragmentManager().setFragmentResult(REQUEST_DATE, bundle);
+//
+//                })
+//                .setView(v)
+//                .create();
     }
 
-    private void configurePicker(View v, Calendar cal) {
-        mDatePicker = v.findViewById(R.id.picker_crime_date);
-        mDatePicker.init(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE), null);
-    }
+//    private void configurePicker(View v, Calendar cal) {
+//        mDatePicker = v.findViewById(R.id.picker_crime_date);
+//        mDatePicker.init(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE), null);
+//    }
 
     @NonNull
     public static DatePickerDlgFragment newInstance(Date date) {
@@ -82,4 +86,15 @@ public class DatePickerDlgFragment extends DialogFragment {
         return bundle;
     }
 
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Calendar c = Calendar.getInstance();
+        c.set(year, month, dayOfMonth);
+
+        Bundle bundle = new Bundle();
+        Date d = c.getTime();
+        bundle.putSerializable(RESULT_DATE, d);
+
+        getParentFragmentManager().setFragmentResult(REQUEST_DATE, bundle);
+    }
 }
