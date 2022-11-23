@@ -41,7 +41,7 @@ public class CrimeRecyclerViewAdapter extends RecyclerView.Adapter<CrimeRecycler
 
       public void bind(Crime crime) {
          mTextViewTitle.setText(crime.getTitle());
-         DateFormat df = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.SHORT);
+         DateFormat df = DateFormat.getDateInstance(DateFormat.FULL);
          mtextViewDateTime.setText(df.format(crime.getDate()));
          mImageViewSolved.setVisibility(crime.isSolved() ? View.VISIBLE : View.INVISIBLE);
       }

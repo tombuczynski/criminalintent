@@ -8,11 +8,9 @@ import android.view.ViewGroup;
 import com.bignerdranch.android.criminalintent.data.Crime;
 import com.bignerdranch.android.criminalintent.databinding.FragmentCrimeBinding;
 
-import org.jetbrains.annotations.Contract;
-
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
@@ -23,12 +21,12 @@ import androidx.lifecycle.ViewModelProvider;
 public class CrimeFragment extends Fragment {
 
     private static final String TAG = "CrimeFragment";
-
-    public static final String ARG_CRIME_ID = "CRIME_ID";
+    private static final String ARG_CRIME_ID = "CrimeId";
 
     private CrimeViewModel mViewModel;
     private FragmentCrimeBinding b;
     private Crime mCrime;
+    private DateFormat mDateFormattter;
 
     @NonNull
     public static CrimeFragment newInstance(UUID crime_id) {
@@ -37,6 +35,7 @@ public class CrimeFragment extends Fragment {
         return f;
     }
 
+    @NonNull
     public static Bundle prepareArgs(UUID crime_id) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(ARG_CRIME_ID, crime_id);
@@ -48,6 +47,7 @@ public class CrimeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mDateFormattter =  DateFormat.getDateInstance(java.text.DateFormat.LONG);
     }
 
     @Override
@@ -65,6 +65,7 @@ public class CrimeFragment extends Fragment {
         mCrime = mViewModel.getCrime(id);
 
         b.setCrime(mCrime);
+        b.setDateFormattter(mDateFormattter);
 
         //b.setLifecycleOwner(this);
 
@@ -75,9 +76,7 @@ public class CrimeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        b.buttonDateTime.setEnabled(false);
-
-        handleViewEvents();
+        configureDatePickerDialog();
 
         mCrime.isModified().observe(getViewLifecycleOwner(), modified -> {
             if (modified) {
@@ -90,14 +89,23 @@ public class CrimeFragment extends Fragment {
         });
     }
 
-    private void handleViewEvents() {
-        b.buttonDateTime.setOnClickListener(v -> {
-//            Log.d(TAG, "title = " + mCrime.getTitle());
-//            Log.d(TAG, "solved = " + mCrime.isSolved());
-//
-//            mCrime = new Crime("Klipa", true);
-//            mBinding.setCrime(mCrime);
+    private void configureDatePickerDialog() {
+        //b.buttonDateTime.setEnabled(false);
 
+            b.buttonDateTime.setOnClickListener(v -> {
+
+            DatePickerDlgFragment f = DatePickerDlgFragment.newInstance(mCrime.getDate());
+            f.show(getChildFragmentManager(), DatePickerDlgFragment.TAG);
+
+        });
+
+        getChildFragmentManager().setFragmentResultListener(DatePickerDlgFragment.REQUEST_DATE, this, (requestKey, result) -> {
+            if (DatePickerDlgFragment.REQUEST_DATE.equals(requestKey)) {
+                Date d = (Date) result.getSerializable(DatePickerDlgFragment.RESULT_DATE);
+
+                b.buttonDateTime.setText(mDateFormattter.format(d));
+                mCrime.setDate(d);
+            }
         });
 
     }
