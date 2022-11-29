@@ -35,10 +35,11 @@ public class DatePickerDlgFragment extends DialogFragment implements DatePickerD
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        @SuppressLint("InflateParams")
-        View v = LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_view_crime_date, null);
+//        @SuppressLint("InflateParams")
+//        View v = requireActivity().getLayoutInflater().inflate(R.layout.dialog_view_crime_date, null);
+//        View v = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_view_crime_date, null);
         
-        
+
         Date date = (Date)requireArguments().getSerializable(ARG_DATE);
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);

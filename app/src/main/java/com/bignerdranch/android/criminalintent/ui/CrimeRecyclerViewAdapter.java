@@ -36,7 +36,7 @@ public class CrimeRecyclerViewAdapter extends RecyclerView.Adapter<CrimeRecycler
          mImageViewSolved = itemView.findViewById(R.id.imageViewSolved);
 
          itemView.setOnClickListener(this);
-         //itemView.setOnLongClickListener(this);
+         itemView.setOnLongClickListener(this);
       }
 
       public void bind(Crime crime) {
@@ -52,17 +52,21 @@ public class CrimeRecyclerViewAdapter extends RecyclerView.Adapter<CrimeRecycler
 
       @Override
       public void onClick(View itemView) {
-         //int pos = getAdapterPosition();
+         int pos = getAdapterPosition();
 
          //showToast("Wybrane: " + mTextViewTitle.getText());
+         mViewModel.setActivatedItemPos(pos);
 
-         mViewModel.setSelectedItemPos(getAdapterPosition());
+         mViewModel.setSelectedItemPos(pos);
       }
 
       @Override
       public boolean onLongClick(View v) {
-         showToast("Edycja: " + mTextViewTitle.getText());
-         return true;
+         //showToast("Edycja: " + mTextViewTitle.getText());
+
+         mViewModel.setActivatedItemPos(getAdapterPosition());
+
+         return v.showContextMenu();
       }
    }
 

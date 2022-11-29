@@ -39,6 +39,10 @@ public class Crime {
         mDate = date;
     }
 
+    public Crime(String title) {
+        this(title, false , false);
+    }
+
     public UUID getId() {
         return mId;
     }

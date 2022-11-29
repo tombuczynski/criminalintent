@@ -41,6 +41,8 @@ public class CrimePagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crime_pager);
 
+        //getSupportActionBar().setHomeButtonEnabled(false);
+
         mViewPagerCrimes = findViewById(R.id.viewPagerCrimes);
 
         mViewModel = new ViewModelProvider(this).get(CrimeViewModel.class);
@@ -54,6 +56,9 @@ public class CrimePagerActivity extends AppCompatActivity {
                 Intent data = new Intent();
                 data.putExtra(EXTRA_MODIFIED_CRIMES_SET, modifiedItems);
                 setResult(RESULT_OK, data);
+
+                if (modifiedItems.containsValue(CrimeViewModel.ItemModifyKind.REMOVED))
+                    finish();
             }
         });
 

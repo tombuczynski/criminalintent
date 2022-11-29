@@ -3,7 +3,7 @@ package com.bignerdranch.android.criminalintent.ui;
 import com.bignerdranch.android.criminalintent.data.Crime;
 import com.bignerdranch.android.criminalintent.data.CrimeLab;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,9 +12,26 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class CrimeViewModel extends ViewModel {
+
     private CrimeLab mCrimeLab;
     private MutableLiveData<Integer> mSelectedItemPos;
-    private MutableLiveData<HashSet<UUID>> mModifiedItems;
+
+    public enum ItemModifyKind {CHANGED, INSERTED, REMOVED};
+
+    private MutableLiveData<HashMap<UUID, ItemModifyKind>> mModifiedItems;
+
+    private int mActivatedItemPos;
+
+    public int getActivatedItemPos() {
+        int id = mActivatedItemPos;
+        mActivatedItemPos = -1;
+
+        return id;
+    }
+
+    public void setActivatedItemPos(int itemPos) {
+        mActivatedItemPos = itemPos;
+    }
 
     public LiveData<Integer> getSelectedItemPos() {
         if (mSelectedItemPos == null) {
@@ -31,18 +48,26 @@ public class CrimeViewModel extends ViewModel {
         }
     }
 
-    public LiveData<HashSet<UUID>> getModifiedItems() {
+    public LiveData<HashMap<UUID, ItemModifyKind>> getModifiedItems() {
         if (mModifiedItems == null) {
-            mModifiedItems = new MutableLiveData<>(new HashSet<>());
+            mModifiedItems = new MutableLiveData<>(new HashMap<>());
         }
         return mModifiedItems;
     }
 
-    public void setModifiedItems(HashSet<UUID> modifiedItems) {
+    public void setModifiedItems(HashMap<UUID, ItemModifyKind> modifiedItemsId) {
         if (mModifiedItems == null) {
-            mModifiedItems = new MutableLiveData<>(modifiedItems);
+            mModifiedItems = new MutableLiveData<>(modifiedItemsId);
         } else {
-            mModifiedItems.setValue(modifiedItems);
+            mModifiedItems.setValue(modifiedItemsId);
+        }
+    }
+
+    public void addModifiedItem(UUID modifiedItemId, ItemModifyKind kind) {
+        HashMap<UUID, ItemModifyKind> modifiedItems = getModifiedItems().getValue();
+        if (modifiedItems !=null) {
+            modifiedItems.put(modifiedItemId, kind);
+            setModifiedItems(modifiedItems);
         }
     }
 
@@ -56,6 +81,17 @@ public class CrimeViewModel extends ViewModel {
         return  mCrimeLab.getCrime(id);
     }
 
+    public void removeCrime(UUID id) {
+        loadCrimeLab();
+        mCrimeLab.removeCrime(id);
+    }
+
+    public void removeCrime(int itemPos) {
+        UUID id = getCrime(itemPos).getId();
+
+        mCrimeLab.removeCrime(id);
+    }
+
     public Crime getCrime(int itemPos) {
         loadCrimeLab();
         return  mCrimeLab.getCrimeList().get(itemPos);
@@ -64,6 +100,13 @@ public class CrimeViewModel extends ViewModel {
     public int getCrimeItemPos(UUID id) {
         loadCrimeLab();
         return  mCrimeLab.getCrimeItemPos(id);
+    }
+
+    public int newCrime(String title) {
+        loadCrimeLab();
+
+        Crime crime = new Crime(title);
+        return mCrimeLab.add(crime);
     }
 
     private void loadCrimeLab() {

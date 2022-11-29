@@ -2,9 +2,13 @@ package com.bignerdranch.android.criminalintent.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bignerdranch.android.criminalintent.R;
 import com.bignerdranch.android.criminalintent.data.Crime;
 import com.bignerdranch.android.criminalintent.databinding.FragmentCrimeBinding;
 
@@ -48,6 +52,8 @@ public class CrimeFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mDateFormattter =  DateFormat.getDateInstance(java.text.DateFormat.LONG);
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -80,13 +86,27 @@ public class CrimeFragment extends Fragment {
 
         mCrime.isModified().observe(getViewLifecycleOwner(), modified -> {
             if (modified) {
-                HashSet<UUID> modifiedItems = mViewModel.getModifiedItems().getValue();
-                if (modifiedItems !=null) {
-                    modifiedItems.add(mCrime.getId());
-                    mViewModel.setModifiedItems(modifiedItems);
-                }
+                mViewModel.addModifiedItem(mCrime.getId(), CrimeViewModel.ItemModifyKind.CHANGED);
             }
         });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_crime, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int menuItemId = item.getItemId();
+
+        if (menuItemId == R.id.menu_remove_crime) {
+            mViewModel.addModifiedItem(mCrime.getId(), CrimeViewModel.ItemModifyKind.REMOVED);
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void configureDatePickerDialog() {
