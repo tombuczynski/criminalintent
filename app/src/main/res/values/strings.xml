@@ -9,8 +9,8 @@
     <string name="call_police">Wezwij policję</string>
     <string name="arrow_start">Pierwszy</string>
     <string name="arrow_end">Ostatni</string>
-    <string name="new_crime">Nowe przestępstwo</string>
-    <string name="remove_crime">Usuń przestępstwo</string>
+    <string name="new_crime">Nowa sprawa</string>
+    <string name="remove_crime">Usuń</string>
     <string name="show_quantity">Pokaż ilość przestępstw</string>
     <string name="hide_quantity">Ukryj ilość przestępstw</string>
 
@@ -19,5 +19,4 @@
         <item quantity="few">%d przestępstwa</item>
         <item quantity="other">%d przestępstw</item>
     </plurals>
-    <string name="new_crime_number">Nowa sprawa #%d</string>
 </resources>

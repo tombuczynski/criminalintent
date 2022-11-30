@@ -123,9 +123,9 @@ public class CrimeListFragment extends Fragment {
     }
 
     private void newCrime() {
-        int newCrimeNumber = mViewModel.getCrimeList().size() + 1;
+        //int newCrimeNumber = mViewModel.getCrimeList().size() + 1;
 
-        int itemPos = mViewModel.newCrime(getResources().getString(R.string.new_crime_number, newCrimeNumber));
+        int itemPos = mViewModel.newCrime(getResources().getString(R.string.new_crime));
         mViewModel.setActivatedItemPos(itemPos);
         mViewModel.addModifiedItem(mViewModel.getCrime(itemPos).getId(), CrimeViewModel.ItemModifyKind.INSERTED);
         mViewModel.setSelectedItemPos(itemPos);

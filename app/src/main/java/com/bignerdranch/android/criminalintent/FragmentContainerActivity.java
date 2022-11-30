@@ -18,6 +18,9 @@ public abstract class FragmentContainerActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_fragment_container);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         if (savedInstanceState == null) {
             addCrimeFragment(R.id.fragment_container, getFragmentClass());
         }
