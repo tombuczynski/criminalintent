@@ -14,7 +14,7 @@ import androidx.lifecycle.MutableLiveData;
  * Created by Tom Buczynski on 13.01.2022.
  */
 public class Crime {
-    private final UUID mId;
+    private UUID mId;
     private String mTitle;
     private Date mDate;
     private boolean mSolved;
@@ -33,10 +33,11 @@ public class Crime {
         mIsModified = new MutableLiveData<>(false);
     }
 
-    public Crime(String title, boolean solved, boolean requiresPolice, Date date) {
+    public Crime(UUID id, String title, boolean solved, Date date, boolean requiresPolice) {
         this(title, solved, requiresPolice);
 
         mDate = date;
+        mId = id;
     }
 
     public Crime(String title) {
@@ -55,6 +56,7 @@ public class Crime {
         mDate = date;
         mIsModified.setValue(true);
     }
+
     public String getTitle() {
         return mTitle;
     }
@@ -63,6 +65,7 @@ public class Crime {
         mTitle = title;
         mIsModified.setValue(true);
     }
+
     public boolean isSolved() {
         return mSolved;
     }
@@ -71,6 +74,7 @@ public class Crime {
         mSolved = solved;
         mIsModified.setValue(true);
     }
+
     public boolean isRequiresPolice() {
         return mRequiresPolice;
     }

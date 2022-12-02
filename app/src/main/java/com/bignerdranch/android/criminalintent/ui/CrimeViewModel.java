@@ -14,10 +14,11 @@ import androidx.lifecycle.ViewModel;
 public class CrimeViewModel extends ViewModel {
 
     private CrimeLab mCrimeLab;
+
     private MutableLiveData<Integer> mSelectedItemPos;
 
-    public enum ItemModifyKind {CHANGED, INSERTED, REMOVED};
 
+    public enum ItemModifyKind {CHANGED, INSERTED, REMOVED;};
     private MutableLiveData<HashMap<UUID, ItemModifyKind>> mModifiedItems;
 
     private int mActivatedItemPos;
@@ -27,6 +28,10 @@ public class CrimeViewModel extends ViewModel {
         mActivatedItemPos = -1;
 
         return id;
+    }
+
+    public void setCrimeLab(CrimeLab crimeLab) {
+        mCrimeLab = crimeLab;
     }
 
     public void setActivatedItemPos(int itemPos) {
@@ -72,17 +77,18 @@ public class CrimeViewModel extends ViewModel {
     }
 
     public List<Crime> getCrimeList() {
-        loadCrimeLab();
         return mCrimeLab.getCrimeList();
     }
 
     public Crime getCrime(UUID id) {
-        loadCrimeLab();
         return  mCrimeLab.getCrime(id);
     }
 
+    public Crime getCrime(int itemPos) {
+        return  mCrimeLab.getCrimeList().get(itemPos);
+    }
+
     public void removeCrime(UUID id) {
-        loadCrimeLab();
         mCrimeLab.removeCrime(id);
     }
 
@@ -92,26 +98,25 @@ public class CrimeViewModel extends ViewModel {
         mCrimeLab.removeCrime(id);
     }
 
-    public Crime getCrime(int itemPos) {
-        loadCrimeLab();
-        return  mCrimeLab.getCrimeList().get(itemPos);
+    public void updateCrime(UUID id) {
+        Crime crime = mCrimeLab.getCrime(id);
+
+        mCrimeLab.update(crime);
+    }
+
+    public void updateCrime(int itemPos) {
+        Crime crime = getCrime(itemPos);
+
+        mCrimeLab.update(crime);
     }
 
     public int getCrimeItemPos(UUID id) {
-        loadCrimeLab();
         return  mCrimeLab.getCrimeItemPos(id);
     }
 
     public int newCrime(String title) {
-        loadCrimeLab();
-
         Crime crime = new Crime(title);
-        return mCrimeLab.add(crime);
+        return mCrimeLab.insert(crime);
     }
 
-    private void loadCrimeLab() {
-        if (mCrimeLab == null) {
-            mCrimeLab = CrimeLab.getCrimeLab();
-        }
-    }
 }

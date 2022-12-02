@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.bignerdranch.android.criminalintent.data.CrimeLab;
 import com.bignerdranch.android.criminalintent.thutils.ActivityPrefs;
 import com.bignerdranch.android.criminalintent.ui.CrimeListFragment;
 import com.bignerdranch.android.criminalintent.ui.CrimeViewModel;
@@ -41,6 +42,7 @@ public class CrimeListActivity extends FragmentContainerActivity {
         super.onCreate(savedInstanceState);
 
         mViewModel = new ViewModelProvider(this).get(CrimeViewModel.class);
+        mViewModel.setCrimeLab(CrimeLab.getCrimeLab(this));
 
         registerForCrimeActivityResult();
 

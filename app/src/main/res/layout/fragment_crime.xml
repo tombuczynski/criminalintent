@@ -31,13 +31,12 @@
             android:ems="10"
             android:hint="@string/crime_title_hint"
             android:importantForAutofill="no"
-            android:inputType="text"
+            android:inputType="text|textCapSentences"
             android:minHeight="50sp"
             android:selectAllOnFocus="true"
             android:text="@={crime.title}"
             android:textColorHint="?attr/colorSecondaryVariant"
-            tools:ignore="TextContrastCheck">
-        </EditText>
+            tools:ignore="TextContrastCheck"></EditText>
 
 
 

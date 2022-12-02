@@ -1,5 +1,9 @@
 package com.bignerdranch.android.criminalintent.data;
 
+import android.content.Context;
+
+import com.bignerdranch.android.criminalintent.database.CrimeDbHelper;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,22 +18,29 @@ import androidx.annotation.NonNull;
 public class CrimeLab {
     private static CrimeLab sCrimeLab;
 
-    private final List<Crime> mCrimeList;
+    private List<Crime> mCrimeList;
     private final Map<UUID, Integer> mCrimeMap;
+    private final CrimeDbHelper mDbHelper;
 
-    public static CrimeLab getCrimeLab() {
+    public static CrimeLab getCrimeLab(Context context) {
         if (sCrimeLab == null) {
-            sCrimeLab = new CrimeLab();
 
-            //sCrimeLab.populateCrimeList(75);
+            CrimeDbHelper dbHelper = context != null ? new CrimeDbHelper(context.getApplicationContext()) : null;
+            sCrimeLab = new CrimeLab(dbHelper);
+
+            if (dbHelper == null)
+                sCrimeLab.populateCrimeList(75);
+            else
+                sCrimeLab.fetchCrimeList();
         }
 
         return sCrimeLab;
     }
 
-    protected CrimeLab() {
+    protected CrimeLab(CrimeDbHelper dbHelper) {
         mCrimeList = new ArrayList<>();
         mCrimeMap =  new HashMap<>();
+        mDbHelper = dbHelper;
     }
 
     public List<Crime> getCrimeList() {
@@ -61,11 +72,15 @@ public class CrimeLab {
         if (itemPos >= 0 ) {
             mCrimeList.remove(itemPos);
             updateMap();
+
+            if (mDbHelper != null) {
+                mDbHelper.remove(id);
+            }
         }
     }
 
     public void populateCrimeList(int cnt) {
-        mCrimeList.clear();
+        mCrimeList = new ArrayList<>();
         mCrimeMap.clear();
 
         for (int i = 0; i < cnt; i++) {
@@ -74,7 +89,30 @@ public class CrimeLab {
         }
     }
 
-    public int add(@NonNull Crime crime) {
+    public void fetchCrimeList() {
+        if (mDbHelper != null) {
+            mDbHelper.openDatabase(true);
+            mCrimeList = mDbHelper.fetchAll();
+        }
+
+        updateMap();
+    }
+
+    public int insert(@NonNull Crime crime) {
+        if (mDbHelper != null) {
+            mDbHelper.insert(crime);
+        }
+
+        return add(crime);
+    }
+
+    public void update(@NonNull Crime crime) {
+        if (mDbHelper != null) {
+            mDbHelper.update(crime);
+        }
+    }
+
+    private int add(@NonNull Crime crime) {
         int itemPos = mCrimeList.size();
 
         mCrimeMap.put(crime.getId(), itemPos);

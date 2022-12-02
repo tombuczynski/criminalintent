@@ -20,36 +20,34 @@ public class CrimeLabTest {
 
     @Before
     public void setUp() {
-        mCrimeLab = CrimeLab.getCrimeLab();
+        mCrimeLab = CrimeLab.getCrimeLab(null);
     }
 
     @Test
     public void getCrimeList() {
 
-        List<Crime> crimeList = mCrimeLab.getCrimeList();
-        assertNotNull(crimeList);
+        assertNotNull(mCrimeLab.getCrimeList());
 //        assertEquals("List size:", 100, crimeList.size());
         mCrimeLab.populateCrimeList(200);
-        assertEquals("List size:", 200, crimeList.size());
+        assertEquals("List size:", 200, mCrimeLab.getCrimeList().size());
 
-        Crime cr = crimeList.get(49);
+        Crime cr = mCrimeLab.getCrimeList().get(49);
         assertEquals("Title:", "Sprawa #50", cr.getTitle());
         assertFalse("Expected that crime status = not solved", cr.isSolved());
 
-        cr = crimeList.get(42);
+        cr = mCrimeLab.getCrimeList().get(42);
         assertTrue("Expected that crime status = solved", cr.isSolved());
     }
 
     @Test
     public void getCrime() {
-        List<Crime> crimeList = mCrimeLab.getCrimeList();
-        assertNotNull(crimeList);
+        assertNotNull(mCrimeLab.getCrimeList());
 
-        Crime cr1 = crimeList.get(49);
+        Crime cr1 = mCrimeLab.getCrimeList().get(49);
         Crime cr2 = mCrimeLab.getCrime(cr1.getId());
         assertSame("Item Id " + cr1.getId() + ":", cr1, cr2);
 
-        Crime cr3 = crimeList.get(48);
+        Crime cr3 = mCrimeLab.getCrimeList().get(48);
         assertNotEquals("The same ID of different items:", cr1.getId(), cr3.getId());
 
         Crime cr4 = mCrimeLab.getCrime(UUID.randomUUID());
