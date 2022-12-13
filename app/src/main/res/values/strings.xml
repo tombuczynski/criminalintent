@@ -13,6 +13,19 @@
     <string name="remove_crime">Usuń</string>
     <string name="show_quantity">Pokaż ilość przestępstw</string>
     <string name="hide_quantity">Ukryj ilość przestępstw</string>
+    <string name="choose_suspect">Wskaż sprawcę</string>
+    <string name="send_report">Wyślij raport</string>
+    <string name="report_text">%s: ujawnione w dniu %s, sprawa %s, wskazany sprawca: %s</string>
+    <string name="solved">rozwiązana</string>
+    <string name="not_solved">w toku</string>
+    <string name="report_title">CriminalIntent - raport z przestępstwa</string>
+    <string name="lack">brak</string>
+    <string name="send_report_title">Wyślij raport za pomocą:</string>
+    <string name="suspect">Sprawca</string>
+    <string name="call_suspect">Zadzwoń do sprawcy</string>
+    <string name="suspect_has_no_phone_number">Sprawca nie posiada numeru telefonu</string>
+    <string name="no_read_contact_permission">Nie nadano uprawnień odczytu kontaktów</string>
+    <string name="read_contact_permission_explain">Konieczne uprawnienie do odczytu numeru telefonu z kontaktu</string>
 
     <plurals name="crime_quantity">
         <item quantity="one">%d przestępstwo</item>

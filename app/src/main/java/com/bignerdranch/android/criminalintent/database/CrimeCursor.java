@@ -19,7 +19,7 @@ public class CrimeCursor extends CursorWrapper {
     public static CrimeCursor query(SQLiteDatabase db, String selection, String[] selectionArgs) {
         Cursor c = db.query(
                 CrimeTable.NAME,
-                new String[]{Columns.CRIME_ID, Columns.TITLE, Columns.DATE, Columns.SOLVED},
+                new String[]{Columns.CRIME_ID, Columns.TITLE, Columns.DATE, Columns.SOLVED, Columns.SUSPECT},
                 selection,
                 selectionArgs,
                 null,
@@ -53,12 +53,16 @@ public class CrimeCursor extends CursorWrapper {
         return new Date(l);
     }
 
-    public boolean getSolved() {
+    public boolean isSolved() {
         int i = getInt(getColumnIndex(Columns.SOLVED));
         return i != 0;
     }
 
+    public String getSuspect() {
+        return getString(getColumnIndex(Columns.SUSPECT));
+    }
+
     public Crime getCrime() {
-        return new Crime(getId(), getTitle(), getSolved(), getDate(), false);
+        return new Crime(getId(), getTitle(), isSolved(), getDate(), false, getSuspect());
     }
 }

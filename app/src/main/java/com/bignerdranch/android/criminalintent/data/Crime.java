@@ -18,6 +18,7 @@ public class Crime {
     private String mTitle;
     private Date mDate;
     private boolean mSolved;
+    private String mSuspect;
     private boolean mRequiresPolice;
 
     private final MutableLiveData<Boolean> mIsModified;;
@@ -29,15 +30,17 @@ public class Crime {
 
         mTitle = title;
         mSolved = solved;
+        mSuspect = null;
 
         mIsModified = new MutableLiveData<>(false);
     }
 
-    public Crime(UUID id, String title, boolean solved, Date date, boolean requiresPolice) {
+    public Crime(UUID id, String title, boolean solved, Date date, boolean requiresPolice, String suspect) {
         this(title, solved, requiresPolice);
 
         mDate = date;
         mId = id;
+        mSuspect = suspect;
     }
 
     public Crime(String title) {
@@ -72,6 +75,15 @@ public class Crime {
 
     public void setSolved(boolean solved) {
         mSolved = solved;
+        mIsModified.setValue(true);
+    }
+
+    public String getSuspect() {
+        return mSuspect;
+    }
+
+    public void setSuspect(String suspect) {
+        mSuspect = suspect;
         mIsModified.setValue(true);
     }
 

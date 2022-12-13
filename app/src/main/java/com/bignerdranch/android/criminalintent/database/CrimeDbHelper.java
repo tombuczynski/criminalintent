@@ -41,8 +41,13 @@ public class CrimeDbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+        if (oldVersion == 1) {
+            db.execSQL(CrimeTable.DROP);
+            db.execSQL(CrimeTable.CREATE);
+        }
+
         Log.d(TAG, "DB " + getDatabaseName() +
-                "upgrade from " + oldVersion +
+                " upgrade from " + oldVersion +
                 " to " + newVersion);
     }
 
@@ -87,6 +92,7 @@ public class CrimeDbHelper extends SQLiteOpenHelper {
         values.put(Columns.TITLE, crime.getTitle());
         values.put(Columns.DATE, crime.getDate().getTime());
         values.put(Columns.SOLVED, crime.isSolved() ? 1 : 0);
+        values.put(Columns.SUSPECT, crime.getSuspect());
 
         return values;
     }

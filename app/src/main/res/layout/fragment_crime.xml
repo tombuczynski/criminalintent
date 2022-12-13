@@ -11,54 +11,88 @@
             type="java.text.DateFormat" />
     </data>
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="8dp"
-        tools:context=".ui.CrimeFragment">
+        android:scrollbars="vertical">
 
-        <TextView
-            style="?android:attr/listSeparatorTextViewStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/crime_title_label" />
-
-        <EditText
-            android:id="@+id/editTextTitle"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/crime_title_hint"
-            android:importantForAutofill="no"
-            android:inputType="text|textCapSentences"
-            android:minHeight="50sp"
-            android:selectAllOnFocus="true"
-            android:text="@={crime.title}"
-            android:textColorHint="?attr/colorSecondaryVariant"
-            tools:ignore="TextContrastCheck"></EditText>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="8dp"
+            tools:context=".ui.CrimeFragment">
+
+            <TextView
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/crime_title_label" />
+
+            <EditText
+                android:id="@+id/editTextTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/crime_title_hint"
+                android:importantForAutofill="no"
+                android:inputType="text|textCapSentences"
+                android:minHeight="50sp"
+                android:selectAllOnFocus="true"
+                android:text="@={crime.title}"
+                android:textColorHint="?attr/colorSecondaryVariant"
+                tools:ignore="TextContrastCheck" />
 
 
+            <TextView
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/crime_date_label" />
 
-        <TextView
-            style="?android:attr/listSeparatorTextViewStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/crime_date_label" />
+            <Button
+                android:id="@+id/buttonDateTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/crime_date_descr"
+                android:text="@{dateFormattter.format(crime.date)}"
+                tools:ignore="DuplicateSpeakableTextCheck" />
 
-        <Button
-            android:id="@+id/buttonDateTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{dateFormattter.format(crime.date)}"
-            android:contentDescription="@string/crime_date_descr" />
+            <CheckBox
+                android:id="@+id/checkBoxSolved"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:checked="@={crime.solved}"
+                android:text="@string/crime_solved" />
 
-        <CheckBox
-            android:id="@+id/checkBoxSolved"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="@={crime.solved}"
-            android:text="@string/crime_solved" />
+            <TextView
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/suspect" />
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/buttonChooseSuspect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/choose_suspect" />
+
+            <Button
+                android:id="@+id/buttonCallSuspect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/call_suspect" />
+
+            <Button
+                android:id="@+id/buttonSendReport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/send_report" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </layout>

@@ -25,10 +25,20 @@ import androidx.lifecycle.ViewModelProvider;
  * Created by Tom Buczynski on 20.02.2022.
  */
 public class CrimeListActivity extends FragmentContainerActivity {
-    private CrimeViewModel mViewModel;
-    private ActivityResultLauncher<Intent> mCrimeActivity;
+    private static final String PREF_KEY_SHOW_QUANTITY = "showQuantity";
 
-    private static final String KEY_PREF_SHOW_QUANTITY = "showQuantity";
+    private CrimeViewModel mViewModel;
+
+    private final ActivityResultLauncher<Intent> mCrimeActivity = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        Intent data = result.getData();
+        if (result.getResultCode() == RESULT_OK && data != null) {
+            @SuppressWarnings("unchecked")
+            HashMap<UUID, CrimeViewModel.ItemModifyKind> modifiedItems = (HashMap<UUID, CrimeViewModel.ItemModifyKind>) data.getSerializableExtra(CrimeActivity.EXTRA_MODIFIED_CRIMES_SET);
+
+            handleModifiedItems(modifiedItems);
+            //mViewModel.setLastChangedItemPos(mViewModel.getSelectedItemPos().getValue());
+        }
+    });
 
     private boolean mShowQuantity;
 
@@ -44,12 +54,10 @@ public class CrimeListActivity extends FragmentContainerActivity {
         mViewModel = new ViewModelProvider(this).get(CrimeViewModel.class);
         mViewModel.setCrimeLab(CrimeLab.getCrimeLab(this));
 
-        registerForCrimeActivityResult();
-
         mViewModel.getSelectedItemPos().observe(this, this::onSelItemChanged);
         mViewModel.getModifiedItems().observe(this, this::handleModifiedItems);
 
-        mShowQuantity = ActivityPrefs.getBoolean(this,KEY_PREF_SHOW_QUANTITY, false);
+        mShowQuantity = ActivityPrefs.getBoolean(this, PREF_KEY_SHOW_QUANTITY, false);
         updateCrimeQuantity();
     }
 
@@ -96,7 +104,7 @@ public class CrimeListActivity extends FragmentContainerActivity {
 
     private void toggleShowQuantity() {
         mShowQuantity = !mShowQuantity;
-        ActivityPrefs.putBoolean(this, KEY_PREF_SHOW_QUANTITY, mShowQuantity);
+        ActivityPrefs.putBoolean(this, PREF_KEY_SHOW_QUANTITY, mShowQuantity);
         updateCrimeQuantity();
         invalidateOptionsMenu();
     }
@@ -110,19 +118,6 @@ public class CrimeListActivity extends FragmentContainerActivity {
 
             mCrimeActivity.launch(intent);
         }
-    }
-
-    private void registerForCrimeActivityResult() {
-        mCrimeActivity = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            Intent data = result.getData();
-            if (result.getResultCode() == RESULT_OK && data != null) {
-                @SuppressWarnings("unchecked")
-                HashMap<UUID, CrimeViewModel.ItemModifyKind> modifiedItems = (HashMap<UUID, CrimeViewModel.ItemModifyKind>) data.getSerializableExtra(CrimeActivity.EXTRA_MODIFIED_CRIMES_SET);
-
-                handleModifiedItems(modifiedItems);
-                //mViewModel.setLastChangedItemPos(mViewModel.getSelectedItemPos().getValue());
-            }
-        });
     }
 
     private void handleModifiedItems(@NonNull HashMap<UUID, CrimeViewModel.ItemModifyKind> modifiedItems) {

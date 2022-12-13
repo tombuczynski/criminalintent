@@ -7,7 +7,7 @@ import android.provider.BaseColumns;
  */
 public final class CrimeDbScheme {
     public static final String NAME = "crimes.db";
-    public static final int VERSION = 1;
+    public static final int VERSION = 2;
 
     private CrimeDbScheme() {
     }
@@ -30,6 +30,8 @@ public final class CrimeDbScheme {
             public static final String SOLVED = "solved";
             public static final String SOLVED_TYPE = "INTEGER";
 
+            public static final String SUSPECT = "suspect";
+            public static final String SUSPECT_TYPE = "TEXT";
         }
 
         public static final String CREATE =
@@ -38,8 +40,11 @@ public final class CrimeDbScheme {
                         Columns.CRIME_ID + " " + Columns.CRIME_ID_TYPE + ", " +
                         Columns.TITLE + " " + Columns.TITLE_TYPE + ", " +
                         Columns.DATE + " " + Columns.DATE_TYPE + ", " +
-                        Columns.SOLVED + " " + Columns.SOLVED_TYPE +
+                        Columns.SOLVED + " " + Columns.SOLVED_TYPE + ", " +
+                        Columns.SUSPECT + " " + Columns.SUSPECT_TYPE +
                         ")";
 
+        public static final String DROP =
+                "DROP TABLE IF EXISTS " + NAME;
     }
 }
