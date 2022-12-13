@@ -33,5 +33,15 @@
             <!-- <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".CrimeListActivity"/> -->
         </activity>
     </application>
-
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.PICK"/>
+            <category android:name="android.intent.category.DEFAULT"/>
+            <data android:mimeType="vnd.android.cursor.dir/contact"/>
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.DIAL"/>
+            <category android:name="android.intent.category.DEFAULT"/>
+        </intent>
+    </queries>
 </manifest>

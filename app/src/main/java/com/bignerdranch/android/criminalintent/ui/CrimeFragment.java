@@ -382,7 +382,7 @@ public class CrimeFragment extends Fragment implements LoaderManager.LoaderCallb
     private boolean isPhoneAppPresent() {
         PackageManager pm = requireContext().getPackageManager();
 
-        ResolveInfo info = pm.resolveActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:+48506789091")), PackageManager.MATCH_DEFAULT_ONLY);
+        ResolveInfo info = pm.resolveActivity(new Intent(Intent.ACTION_DIAL), PackageManager.MATCH_DEFAULT_ONLY);
 
         return info != null;
     }
