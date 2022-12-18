@@ -1,18 +1,24 @@
 package com.bignerdranch.android.criminalintent.ui;
 
+import android.content.Context;
+import android.util.Log;
+
 import com.bignerdranch.android.criminalintent.data.Crime;
 import com.bignerdranch.android.criminalintent.data.CrimeLab;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class CrimeViewModel extends ViewModel {
-
+    private static final String TAG = "CrimeViewModel";
     private CrimeLab mCrimeLab;
 
     private MutableLiveData<Integer> mSelectedItemPos;
@@ -92,10 +98,14 @@ public class CrimeViewModel extends ViewModel {
         mCrimeLab.removeCrime(id);
     }
 
-    public void removeCrime(int itemPos) {
-        UUID id = getCrime(itemPos).getId();
+    public void removeCrimeAndPhoto(Context context, int itemPos) {
+        Crime crime = getCrime(itemPos);
+        UUID id = crime.getId();
 
-        mCrimeLab.removeCrime(id);
+        removeCrime(id);
+
+        boolean succ = getPhotoFile(context, crime).delete();
+        Log.d(TAG, "removeCrimeAndPhoto: photo for crime ID " + id.toString() + " " + (succ ? "deleted" : "not exists"));
     }
 
     public void updateCrime(UUID id) {
@@ -119,4 +129,15 @@ public class CrimeViewModel extends ViewModel {
         return mCrimeLab.insert(crime);
     }
 
+    @NonNull
+    public File getPhotoFile(@NonNull Context context, @NonNull Crime crime) {
+        File dir = new File(context.getFilesDir(), "photos");
+        //File dir = context.getFilesDir();
+
+        if (! dir.exists()) {
+            boolean created = dir.mkdir();
+        }
+
+        return new File(dir, crime.getPhotoFileName());
+    }
 }

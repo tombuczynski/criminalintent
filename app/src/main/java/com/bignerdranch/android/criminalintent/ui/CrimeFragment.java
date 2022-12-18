@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,25 +24,32 @@ import android.widget.Toast;
 import com.bignerdranch.android.criminalintent.R;
 import com.bignerdranch.android.criminalintent.data.Crime;
 import com.bignerdranch.android.criminalintent.databinding.FragmentCrimeBinding;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
+
+import static androidx.activity.result.contract.ActivityResultContracts.*;
 
 public class CrimeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -51,7 +59,6 @@ public class CrimeFragment extends Fragment implements LoaderManager.LoaderCallb
     private static final int ID_QUERY_PICKED_CONTACT_DETAILS = 1;
     private static final int ID_QUERY_PHONE_NUMBER = 2;
 
-
     private CrimeViewModel mViewModel;
     private FragmentCrimeBinding b;
     private Crime mCrime;
@@ -60,17 +67,23 @@ public class CrimeFragment extends Fragment implements LoaderManager.LoaderCallb
     private Cursor mPickedContactCursor;
     private Cursor mPhoneCursor;
 
-    private final ActivityResultLauncher<Void> mPickContact = registerForActivityResult(new ActivityResultContracts.PickContact(), result -> {
+    private final ActivityResultLauncher<Void> mPickContact = registerForActivityResult(new PickContact(), result -> {
         if (result != null) {
             initContactQuery(mPickedContactCursor, ID_QUERY_PICKED_CONTACT_DETAILS, result.toString());
         }
     });
 
-    private final ActivityResultLauncher<String> mRequestPermission = registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
+    private final ActivityResultLauncher<String> mRequestPermission = registerForActivityResult(new RequestPermission(), result -> {
         if (result) {
             retrieveSuspectPhoneNumber();
         } else {
             Snackbar.make(b.buttonCallSuspect, R.string.no_read_contact_permission, BaseTransientBottomBar.LENGTH_SHORT).show();
+        }
+    });
+
+    private final ActivityResultLauncher<Uri> mTakePhoto = registerForActivityResult(new TakePicture(), result -> {
+        if (result) {
+            updatePhotoView();
         }
     });
 
@@ -126,6 +139,9 @@ public class CrimeFragment extends Fragment implements LoaderManager.LoaderCallb
 
         configureDatePickerDialog();
         configureButtons();
+        configurePhotoDialog();
+
+        updatePhotoView();
 
         mCrime.isModified().observe(getViewLifecycleOwner(), modified -> {
             if (modified) {
@@ -214,6 +230,21 @@ public class CrimeFragment extends Fragment implements LoaderManager.LoaderCallb
         }
     }
 
+    private void updatePhotoView() {
+        File photoFile = mViewModel.getPhotoFile(requireContext(), mCrime);
+        if (photoFile.exists()) {
+            Long key = photoFile.lastModified();
+
+            Glide.with(this)
+                    .load(photoFile)
+                    .signature(new ObjectKey(key))
+                    .into(b.imageViewPhoto);
+        } else {
+            b.imageViewPhoto.setImageDrawable(null);
+        }
+
+    }
+
     private void initContactQuery(Cursor data, int queryId, String... args) {
         LoaderManager man = LoaderManager.getInstance(this);
 
@@ -224,6 +255,12 @@ public class CrimeFragment extends Fragment implements LoaderManager.LoaderCallb
         Bundle bundle = new Bundle();
         bundle.putStringArray(ARGS_CONTACT_QUERY, args);
         man.initLoader(queryId, bundle, this);
+    }
+
+    private Uri getPhotoUri() {
+        File photoFile =  mViewModel.getPhotoFile(requireContext(), mCrime);
+
+        return FileProvider.getUriForFile(requireContext(), "com.bignerdranch.android.criminalintent.fileprovider", photoFile);
     }
 
     private void configureDatePickerDialog() {
@@ -247,6 +284,17 @@ public class CrimeFragment extends Fragment implements LoaderManager.LoaderCallb
 
     }
 
+    private void configurePhotoDialog() {
+        b.imageViewPhoto.setOnClickListener(v -> {
+
+            File photoFile = mViewModel.getPhotoFile(requireContext(), mCrime);
+            if (photoFile.exists()) {
+                PhotoDlgFragment.show(requireActivity(), photoFile, true);
+            }
+
+        });
+    }
+
     private void configureButtons() {
         b.buttonSendReport.setOnClickListener(v -> sendReport(createReport()));
 
@@ -260,6 +308,12 @@ public class CrimeFragment extends Fragment implements LoaderManager.LoaderCallb
             b.buttonCallSuspect.setOnClickListener(v -> retrieveSuspectPhoneNumber());
         } else {
             b.buttonCallSuspect.setEnabled(false);
+        }
+
+        if (isCameraAppPresent()) {
+            b.buttonTakePhoto.setOnClickListener(v -> mTakePhoto.launch(getPhotoUri()));
+        } else {
+            b.buttonTakePhoto.setEnabled(false);
         }
 
         String suspect = mCrime.getSuspect();
@@ -383,6 +437,14 @@ public class CrimeFragment extends Fragment implements LoaderManager.LoaderCallb
         PackageManager pm = requireContext().getPackageManager();
 
         ResolveInfo info = pm.resolveActivity(new Intent(Intent.ACTION_DIAL), PackageManager.MATCH_DEFAULT_ONLY);
+
+        return info != null;
+    }
+
+    private boolean isCameraAppPresent() {
+        PackageManager pm = requireContext().getPackageManager();
+
+        ResolveInfo info = pm.resolveActivity(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), PackageManager.MATCH_DEFAULT_ONLY);
 
         return info != null;
     }

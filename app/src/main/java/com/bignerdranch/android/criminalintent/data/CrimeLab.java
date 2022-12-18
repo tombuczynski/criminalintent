@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.bignerdranch.android.criminalintent.database.CrimeDbHelper;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

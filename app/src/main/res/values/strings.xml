@@ -26,6 +26,8 @@
     <string name="suspect_has_no_phone_number">Sprawca nie posiada numeru telefonu</string>
     <string name="no_read_contact_permission">Nie nadano uprawnień odczytu kontaktów</string>
     <string name="read_contact_permission_explain">Konieczne uprawnienie do odczytu numeru telefonu z kontaktu</string>
+    <string name="take_photo">Zrób zdjęcie</string>
+    <string name="photo">Fotografia</string>
 
     <plurals name="crime_quantity">
         <item quantity="one">%d przestępstwo</item>

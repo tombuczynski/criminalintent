@@ -135,7 +135,7 @@ public class CrimeListActivity extends FragmentContainerActivity {
                         updateCrimeQuantity();
                         break;
                     case REMOVED:
-                        mViewModel.removeCrime(itemPos);
+                        mViewModel.removeCrimeAndPhoto(this, itemPos);
                         f.notifyItemRemoved(itemPos);
                         updateCrimeQuantity();
                         break;

@@ -21,7 +21,7 @@ public class Crime {
     private String mSuspect;
     private boolean mRequiresPolice;
 
-    private final MutableLiveData<Boolean> mIsModified;;
+    private final MutableLiveData<Boolean> mIsModified;
 
     public Crime(String title, boolean solved, boolean requiresPolice) {
         mRequiresPolice = requiresPolice;
@@ -49,6 +49,10 @@ public class Crime {
 
     public UUID getId() {
         return mId;
+    }
+
+    public String getPhotoFileName() {
+        return getId().toString() + ".jpg";
     }
 
     public Date getDate() {
