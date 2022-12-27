@@ -8,12 +8,10 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.bignerdranch.android.criminalintent.data.CrimeLab;
-import com.bignerdranch.android.criminalintent.ui.CrimeFragmentAdapter;
+import com.bignerdranch.android.criminalintent.ui.CrimeFragmentPageAdapter;
 import com.bignerdranch.android.criminalintent.ui.CrimeViewModel;
 
 import java.util.HashMap;
@@ -76,7 +74,7 @@ public class CrimePagerActivity extends AppCompatActivity {
     }
 
     private void configureViewPager() {
-        mViewPagerCrimes.setAdapter(new CrimeFragmentAdapter(this, mViewModel));
+        mViewPagerCrimes.setAdapter(new CrimeFragmentPageAdapter(this, mViewModel));
 
         Intent intent = getIntent();
         UUID id = (UUID) intent.getSerializableExtra(EXTRA_CRIME_ID);
@@ -108,8 +106,8 @@ public class CrimePagerActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
 
         HashMap<UUID, CrimeViewModel.ItemModifyKind> modifiedItems = mViewModel.getModifiedItems().getValue();
 

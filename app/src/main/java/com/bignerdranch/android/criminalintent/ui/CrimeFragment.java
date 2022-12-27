@@ -12,6 +12,7 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -55,6 +56,7 @@ public class CrimeFragment extends Fragment implements LoaderManager.LoaderCallb
 
     private static final String TAG = "CrimeFragment";
     private static final String ARG_CRIME_ID = "CrimeId";
+    private static final String ARG_FULLSCREEN = "FullScreen";
     private static final String ARGS_CONTACT_QUERY = "ContactQuery";
     private static final int ID_QUERY_PICKED_CONTACT_DETAILS = 1;
     private static final int ID_QUERY_PHONE_NUMBER = 2;
@@ -63,6 +65,7 @@ public class CrimeFragment extends Fragment implements LoaderManager.LoaderCallb
     private FragmentCrimeBinding b;
     private Crime mCrime;
     private DateFormat mDateFormattter;
+    private boolean mFullScreen;
 
     private Cursor mPickedContactCursor;
     private Cursor mPhoneCursor;
@@ -88,16 +91,17 @@ public class CrimeFragment extends Fragment implements LoaderManager.LoaderCallb
     });
 
     @NonNull
-    public static CrimeFragment newInstance(UUID crime_id) {
+    public static CrimeFragment newInstance(UUID crime_id, boolean fullscreen) {
         CrimeFragment f = new CrimeFragment();
-        f.setArguments(prepareArgs(crime_id));
+        f.setArguments(prepareArgs(crime_id, fullscreen));
         return f;
     }
 
     @NonNull
-    public static Bundle prepareArgs(UUID crime_id) {
+    public static Bundle prepareArgs(UUID crime_id, boolean fulscreen) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(ARG_CRIME_ID, crime_id);
+        bundle.putBoolean(ARG_FULLSCREEN, fulscreen);
 
         return bundle;
     }
@@ -123,6 +127,7 @@ public class CrimeFragment extends Fragment implements LoaderManager.LoaderCallb
         b = FragmentCrimeBinding.inflate(inflater, container, false);
 
         UUID id = (UUID)requireArguments().getSerializable(ARG_CRIME_ID);
+
         mCrime = mViewModel.getCrime(id);
 
         b.setCrime(mCrime);
@@ -136,6 +141,8 @@ public class CrimeFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mFullScreen = requireArguments().getBoolean(ARG_FULLSCREEN);
 
         configureDatePickerDialog();
         configureButtons();
@@ -289,7 +296,7 @@ public class CrimeFragment extends Fragment implements LoaderManager.LoaderCallb
 
             File photoFile = mViewModel.getPhotoFile(requireContext(), mCrime);
             if (photoFile.exists()) {
-                PhotoDlgFragment.show(requireActivity(), photoFile, true);
+                PhotoDlgFragment.show(requireActivity(), photoFile, mFullScreen);
             }
 
         });

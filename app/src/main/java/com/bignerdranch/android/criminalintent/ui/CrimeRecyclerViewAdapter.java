@@ -11,10 +11,16 @@ import android.widget.Toast;
 
 import com.bignerdranch.android.criminalintent.R;
 import com.bignerdranch.android.criminalintent.data.Crime;
+import com.bignerdranch.android.criminalintent.ui.selection.CrimeDetails;
 
 import java.text.DateFormat;
+import java.util.Objects;
+import java.util.UUID;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.selection.ItemDetailsLookup;
+import androidx.recyclerview.selection.Selection;
+import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -39,11 +45,21 @@ public class CrimeRecyclerViewAdapter extends RecyclerView.Adapter<CrimeRecycler
          itemView.setOnLongClickListener(this);
       }
 
-      public void bind(Crime crime) {
+      public void bind(@NonNull Crime crime) {
          mTextViewTitle.setText(crime.getTitle());
          DateFormat df = DateFormat.getDateInstance(DateFormat.FULL);
          mtextViewDateTime.setText(df.format(crime.getDate()));
          mImageViewSolved.setVisibility(crime.isSolved() ? View.VISIBLE : View.INVISIBLE);
+
+         if (mUseSelection) {
+            if (mSelectionTracker != null) {
+               itemView.setActivated(mSelectionTracker.isSelected(crime.getId().toString()));
+            } else {
+               int selPos = Objects.requireNonNull(mViewModel.getSelectedItemPos().getValue());
+
+               itemView.setActivated(selPos == getAdapterPosition());
+            }
+         }
       }
 
       protected void showToast(CharSequence msg) {
@@ -56,17 +72,23 @@ public class CrimeRecyclerViewAdapter extends RecyclerView.Adapter<CrimeRecycler
 
          //showToast("Wybrane: " + mTextViewTitle.getText());
          mViewModel.setActivatedItemPos(pos);
-
          mViewModel.setSelectedItemPos(pos);
+
       }
 
       @Override
-      public boolean onLongClick(View v) {
+      public boolean onLongClick(@NonNull View v) {
          //showToast("Edycja: " + mTextViewTitle.getText());
 
          mViewModel.setActivatedItemPos(getAdapterPosition());
 
          return v.showContextMenu();
+      }
+
+      public ItemDetailsLookup.ItemDetails<String> getItemDetails() {
+         int pos = getAdapterPosition();
+
+         return new CrimeDetails(pos, mViewModel.getCrime(pos).getId());
       }
    }
 
@@ -82,9 +104,17 @@ public class CrimeRecyclerViewAdapter extends RecyclerView.Adapter<CrimeRecycler
 
 
    private final CrimeViewModel mViewModel;
+   private final boolean mUseSelection;
 
-   public CrimeRecyclerViewAdapter(CrimeViewModel viewModel) {
+   public void setSelectionTracker(SelectionTracker<String> selectionTracker) {
+      mSelectionTracker = selectionTracker;
+   }
+
+   private SelectionTracker<String> mSelectionTracker;
+
+   public CrimeRecyclerViewAdapter(CrimeViewModel viewModel, boolean useSelection) {
       mViewModel = viewModel;
+      mUseSelection = useSelection;
    }
 
 

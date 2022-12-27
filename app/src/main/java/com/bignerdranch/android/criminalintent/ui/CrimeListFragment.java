@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,8 +20,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.bignerdranch.android.criminalintent.R;
+import com.bignerdranch.android.criminalintent.data.Crime;
 
-import org.jetbrains.annotations.Contract;
+import java.util.UUID;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,11 +31,16 @@ import org.jetbrains.annotations.Contract;
  */
 public class CrimeListFragment extends Fragment {
 
+    private static final String ARG_USE_SELECTION = "UseSelection";
+
     public CrimeRecyclerViewAdapter mRecViewAdapter;
     private int mContextMenuItemPos;
     private CrimeViewModel mViewModel;
     private RecyclerView mRecyclerViewCrimes;
     private Button mButtonNewCrime;
+
+    private boolean mUseSelection;
+    private UUID mLastSelectedItemId;
 
     /**
      * Use this factory method to create a new instance of
@@ -42,9 +49,18 @@ public class CrimeListFragment extends Fragment {
      * @return A new instance of fragment CrimeListFragment.
      */
     @NonNull
-    @Contract(" -> new")
-    public static CrimeListFragment newInstance() {
-        return new CrimeListFragment();
+    public static CrimeListFragment newInstance(boolean useSelection) {
+        CrimeListFragment f = new CrimeListFragment();
+        f.setArguments(prepareArgs(useSelection));
+        return f;
+    }
+
+    @NonNull
+    public static Bundle prepareArgs(boolean useSelection) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(ARG_USE_SELECTION, useSelection);
+
+        return bundle;
     }
 
     @Override
@@ -68,18 +84,95 @@ public class CrimeListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mUseSelection = requireArguments().getBoolean(ARG_USE_SELECTION);
+
         mRecyclerViewCrimes = view.findViewById(R.id.recyclerViewCrimeList);
 
         mRecyclerViewCrimes.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
-        mRecViewAdapter = new CrimeRecyclerViewAdapter(mViewModel);
+        mRecViewAdapter = new CrimeRecyclerViewAdapter(mViewModel, mUseSelection);
         mRecyclerViewCrimes.setAdapter(mRecViewAdapter);
+
+//        SelectionTracker<String> selectionTracker = new SelectionTracker.Builder<String>(
+//                "crimeSelection",
+//                mRecyclerViewCrimes,
+//                new CrimeIdKeyProvider(mViewModel),
+//                new CrimeDetailsLookup(mRecyclerViewCrimes),
+//                StorageStrategy.createStringStorage())
+//                .withSelectionPredicate(SelectionPredicates.createSelectSingleAnything())
+//                //.withOnItemActivatedListener((item, e) -> false)
+//                //.withOnContextClickListener(e -> false)
+//                .build();
+//
+//        mRecViewAdapter.setSelectionTracker(selectionTracker);
+//
+//        selectionTracker.addObserver(new SelectionTracker.SelectionObserver<String>() {
+//            @Override
+//            public void onItemStateChanged(@NonNull String key, boolean selected) {
+//                super.onItemStateChanged(key, selected);
+//            }
+//
+//
+//            @Override
+//            public void onSelectionChanged() {
+//                super.onSelectionChanged();
+//            }
+//
+//        });
 
         registerForContextMenu(mRecyclerViewCrimes);
 
         mButtonNewCrime = view.findViewById(R.id.buttonNewCrime);
         updateButtonNewCrime();
         mButtonNewCrime.setOnClickListener(v -> newCrime());
+
+        if (mUseSelection)
+            trackSelection();
+
+        handleItemSwipe();
+    }
+
+    private void handleItemSwipe() {
+        ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int itemPos = viewHolder.getAdapterPosition();
+
+                removeItem(itemPos);
+            }
+        });
+
+        touchHelper.attachToRecyclerView(mRecyclerViewCrimes);
+    }
+
+    private void removeItem(int itemPos) {
+        mViewModel.addModifiedItem(mViewModel.getCrime(itemPos).getId(), CrimeViewModel.ItemModifyKind.REMOVED);
+    }
+
+    private void trackSelection() {
+        mLastSelectedItemId = null;
+        mViewModel.getSelectedItemPos().observe(getViewLifecycleOwner(), pos -> {
+            if (mLastSelectedItemId != null) {
+                int lastPos = mViewModel.getCrimeItemPos(mLastSelectedItemId);
+
+                if (lastPos >= 0) {
+                    mRecViewAdapter.notifyItemChanged(lastPos);
+                }
+            }
+
+            if (pos >= 0) {
+                mRecViewAdapter.notifyItemChanged(pos);
+                Crime crime = mViewModel.getCrime(pos);
+                mLastSelectedItemId = crime.getId();
+            } else {
+                mLastSelectedItemId = null;
+            }
+        });
     }
 
     private void updateButtonNewCrime() {
@@ -143,7 +236,7 @@ public class CrimeListFragment extends Fragment {
         int menuItemId = item.getItemId();
 
         if (menuItemId == R.id.menu_remove_crime) {
-            mViewModel.addModifiedItem(mViewModel.getCrime(mContextMenuItemPos).getId(), CrimeViewModel.ItemModifyKind.REMOVED);
+            removeItem(mContextMenuItemPos);
 
             return true;
         }

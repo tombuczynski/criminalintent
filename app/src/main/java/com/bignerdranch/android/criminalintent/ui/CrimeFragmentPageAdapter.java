@@ -8,10 +8,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 /**
  * Created by Tom Buczynski on 21.11.2022.
  */
-public class CrimeFragmentAdapter extends FragmentStateAdapter {
+public class CrimeFragmentPageAdapter extends FragmentStateAdapter {
    private final CrimeViewModel mViewModel;
 
-   public CrimeFragmentAdapter(@NonNull FragmentActivity fragmentActivity, CrimeViewModel viewModel) {
+   public CrimeFragmentPageAdapter(@NonNull FragmentActivity fragmentActivity, CrimeViewModel viewModel) {
       super(fragmentActivity);
 
       mViewModel = viewModel;
@@ -20,7 +20,7 @@ public class CrimeFragmentAdapter extends FragmentStateAdapter {
    @Override
    @NonNull
    public Fragment createFragment(int position) {
-      return CrimeFragment.newInstance(mViewModel.getCrimeList().get(position).getId());
+      return CrimeFragment.newInstance(mViewModel.getCrimeList().get(position).getId(), true);
    }
 
    @Override

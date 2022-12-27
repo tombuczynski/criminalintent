@@ -82,9 +82,9 @@ public class PhotoDlgFragment extends DialogFragment {
 
 
     @NonNull
-    public static PhotoDlgFragment newInstance(File photoFile) {
+    public static PhotoDlgFragment newInstance(File photoFile, boolean fullscreen) {
         PhotoDlgFragment f = new PhotoDlgFragment();
-        f.setArguments(prepareArgs(photoFile, false));
+        f.setArguments(prepareArgs(photoFile, fullscreen));
 
         return f;
     }
@@ -100,7 +100,7 @@ public class PhotoDlgFragment extends DialogFragment {
                     .addToBackStack(TAG)
                     .commit();
         } else {
-            PhotoDlgFragment f = PhotoDlgFragment.newInstance(photoFile);
+            PhotoDlgFragment f = PhotoDlgFragment.newInstance(photoFile, false);
             f.show(fragMan, PhotoDlgFragment.TAG);
         }
     }

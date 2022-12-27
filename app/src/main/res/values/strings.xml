@@ -28,6 +28,7 @@
     <string name="read_contact_permission_explain">Konieczne uprawnienie do odczytu numeru telefonu z kontaktu</string>
     <string name="take_photo">Zrób zdjęcie</string>
     <string name="photo">Fotografia</string>
+    <string name="select_from_list">Wybierz sprawę z listy</string>
 
     <plurals name="crime_quantity">
         <item quantity="one">%d przestępstwo</item>

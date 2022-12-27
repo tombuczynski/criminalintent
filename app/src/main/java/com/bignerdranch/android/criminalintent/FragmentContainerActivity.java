@@ -1,5 +1,6 @@
 package com.bignerdranch.android.criminalintent;
 
+import androidx.annotation.IdRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -7,10 +8,9 @@ import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 
-import com.bignerdranch.android.criminalintent.R;
-import com.bignerdranch.android.criminalintent.ui.CrimeFragment;
-
 public abstract class FragmentContainerActivity extends AppCompatActivity {
+
+    protected boolean mIsDualPanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,15 +18,17 @@ public abstract class FragmentContainerActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_fragment_container);
 
+        mIsDualPanel = findViewById(R.id.fragment_container_details) != null;
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         if (savedInstanceState == null) {
-            addCrimeFragment(R.id.fragment_container, getFragmentClass());
+            addFragment(R.id.fragment_container, getFragmentClass());
         }
     }
 
-    private void addCrimeFragment(int containerId, Class<? extends Fragment> fragmentClass) {
+    private void addFragment(int containerId, Class<? extends Fragment> fragmentClass) {
         FragmentManager fragMan = getSupportFragmentManager();
 
         fragMan.beginTransaction()

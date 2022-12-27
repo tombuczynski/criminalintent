@@ -15,62 +15,60 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="8dp"
         android:scrollbars="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="8dp"
             tools:context=".ui.CrimeFragment">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <LinearLayout
-                    android:id="@+id/linearLayoutPhoto"
+
+                <ImageView
+                    android:id="@+id/imageViewPhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="80dp"
+                    android:clickable="true"
+                    android:contentDescription="@string/photo"
+                    android:focusable="true"
+                    android:scaleType="centerInside"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ImageContrastCheck"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+                <ImageButton
+                    android:id="@+id/buttonTakePhoto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <ImageView
-                        android:id="@+id/imageViewPhoto"
-                        android:layout_width="wrap_content"
-                        android:layout_height="80dp"
-                        android:layout_marginEnd="4dp"
-                        android:clickable="true"
-                        android:contentDescription="@string/photo"
-                        android:scaleType="centerInside"
-                        tools:ignore="ImageContrastCheck"
-                        tools:srcCompat="@tools:sample/avatars"
-                        android:focusable="true" />
-
-                    <ImageButton
-                        android:id="@+id/buttonTakePhoto"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:contentDescription="@string/take_photo"
-                        android:minHeight="48dp"
-                        app:srcCompat="@drawable/camera" />
-                </LinearLayout>
+                    android:layout_gravity="center_horizontal"
+                    android:contentDescription="@string/take_photo"
+                    android:minHeight="48dp"
+                    app:layout_constraintEnd_toEndOf="@+id/barrierPhoto"
+                    app:layout_constraintStart_toStartOf="@+id/imageViewPhoto"
+                    app:layout_constraintTop_toBottomOf="@+id/imageViewPhoto"
+                    app:srcCompat="@drawable/camera" />
 
                 <TextView
                     android:id="@+id/textViewTitle"
                     style="?android:attr/listSeparatorTextViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:text="@string/crime_title_label"
-                    app:layout_constraintStart_toEndOf="@+id/linearLayoutPhoto"
+                    app:layout_constraintStart_toStartOf="@id/barrierPhoto"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
                     android:id="@+id/editTextTitle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
                     android:ems="10"
                     android:hint="@string/crime_title_hint"
                     android:importantForAutofill="no"
@@ -81,9 +79,17 @@
                     android:text="@={crime.title}"
                     android:textColorHint="?attr/colorSecondaryVariant"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/linearLayoutPhoto"
+                    app:layout_constraintStart_toEndOf="@+id/barrierPhoto"
                     app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
                     tools:ignore="TextContrastCheck" />
+
+                <androidx.constraintlayout.widget.Barrier
+                    android:id="@+id/barrierPhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:barrierDirection="end"
+                    app:constraint_referenced_ids="imageViewPhoto,buttonTakePhoto"
+                    tools:layout_editor_absoluteX="395dp" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 

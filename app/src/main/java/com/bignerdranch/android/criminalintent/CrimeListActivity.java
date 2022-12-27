@@ -7,18 +7,24 @@ import android.view.MenuItem;
 
 import com.bignerdranch.android.criminalintent.data.CrimeLab;
 import com.bignerdranch.android.criminalintent.thutils.ActivityPrefs;
+import com.bignerdranch.android.criminalintent.ui.CrimeFragment;
 import com.bignerdranch.android.criminalintent.ui.CrimeListFragment;
 import com.bignerdranch.android.criminalintent.ui.CrimeViewModel;
+import com.bignerdranch.android.criminalintent.ui.NoSelectionFragment;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 /**
@@ -28,6 +34,9 @@ public class CrimeListActivity extends FragmentContainerActivity {
     private static final String PREF_KEY_SHOW_QUANTITY = "showQuantity";
 
     private CrimeViewModel mViewModel;
+
+    private List<UUID> mItemsToSave;
+    private boolean mShowQuantity;
 
     private final ActivityResultLauncher<Intent> mCrimeActivity = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         Intent data = result.getData();
@@ -40,7 +49,6 @@ public class CrimeListActivity extends FragmentContainerActivity {
         }
     });
 
-    private boolean mShowQuantity;
 
     @Override
     protected Class<? extends Fragment> getFragmentClass() {
@@ -48,8 +56,15 @@ public class CrimeListActivity extends FragmentContainerActivity {
     }
 
     @Override
+    protected Bundle getArgs() {
+        return CrimeListFragment.prepareArgs(mIsDualPanel);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mItemsToSave = new ArrayList<>();
 
         mViewModel = new ViewModelProvider(this).get(CrimeViewModel.class);
         mViewModel.setCrimeLab(CrimeLab.getCrimeLab(this));
@@ -59,6 +74,18 @@ public class CrimeListActivity extends FragmentContainerActivity {
 
         mShowQuantity = ActivityPrefs.getBoolean(this, PREF_KEY_SHOW_QUANTITY, false);
         updateCrimeQuantity();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        for (UUID id : mItemsToSave) {
+            mViewModel.updateCrime(id);
+        }
+
+        mItemsToSave.clear();
+
     }
 
     @Override
@@ -92,13 +119,29 @@ public class CrimeListActivity extends FragmentContainerActivity {
     }
 
     private void onSelItemChanged(Integer itemPos) {
-        if (itemPos >= 0)
-        {
-
-
+        if (mIsDualPanel) {
+            showCrimeDetails(itemPos);
+        } else if (itemPos >= 0) {
             if (itemPos == mViewModel.getActivatedItemPos()) {
                 startCrimeActivity(itemPos);
             }
+        }
+    }
+
+    private void showCrimeDetails(int itemPos) {
+        FragmentManager fragMan = getSupportFragmentManager();
+
+        if (itemPos >= 0) {
+            fragMan.beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(R.id.fragment_container_details, CrimeFragment.class,
+                            CrimeFragment.prepareArgs(mViewModel.getCrime(itemPos).getId(), false))
+                    .commit();
+        } else {
+            fragMan.beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(R.id.fragment_container_details, NoSelectionFragment.class, null)
+                    .commit();
         }
     }
 
@@ -123,12 +166,16 @@ public class CrimeListActivity extends FragmentContainerActivity {
     private void handleModifiedItems(@NonNull HashMap<UUID, CrimeViewModel.ItemModifyKind> modifiedItems) {
         CrimeListFragment f = (CrimeListFragment) getFragment();
         for (Map.Entry<UUID, CrimeViewModel.ItemModifyKind> item: modifiedItems.entrySet()) {
-            int itemPos = mViewModel.getCrimeItemPos(item.getKey());
+            UUID id = item.getKey();
+            int itemPos = mViewModel.getCrimeItemPos(id);
             if (itemPos >= 0) {
                 switch (item.getValue()) {
                     case CHANGED:
                         f.notifyItemChanged(itemPos);
                         mViewModel.getCrimeList().get(itemPos).clearModified();
+                        if (mIsDualPanel) {
+                            mItemsToSave.add(id);
+                        }
                         break;
                     case INSERTED:
                         f.notifyItemInserted(itemPos);
@@ -137,6 +184,7 @@ public class CrimeListActivity extends FragmentContainerActivity {
                     case REMOVED:
                         mViewModel.removeCrimeAndPhoto(this, itemPos);
                         f.notifyItemRemoved(itemPos);
+                        mViewModel.setSelectedItemPos(-1);
                         updateCrimeQuantity();
                         break;
                 }

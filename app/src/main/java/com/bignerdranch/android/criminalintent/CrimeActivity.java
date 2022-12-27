@@ -8,6 +8,7 @@ import com.bignerdranch.android.criminalintent.ui.CrimeViewModel;
 
 import java.util.UUID;
 
+import androidx.annotation.IdRes;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -45,7 +46,7 @@ public class CrimeActivity extends FragmentContainerActivity {
         Intent intent = getIntent();
         UUID id = (UUID)intent.getSerializableExtra(EXTRA_CRIME_ID);
 
-        return CrimeFragment.prepareArgs(id);
+        return CrimeFragment.prepareArgs(id, true);
     }
 
 
