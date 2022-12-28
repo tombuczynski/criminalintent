@@ -20,11 +20,11 @@ public class CrimeFragmentPageAdapter extends FragmentStateAdapter {
    @Override
    @NonNull
    public Fragment createFragment(int position) {
-      return CrimeFragment.newInstance(mViewModel.getCrimeList().get(position).getId(), true);
+      return CrimeFragment.newInstance(mViewModel.getCrime(position).getId(), true);
    }
 
    @Override
    public int getItemCount() {
-      return mViewModel.getCrimeList().size();
+      return mViewModel.getCrimesCount();
    }
 }

@@ -82,8 +82,8 @@ public class CrimeViewModel extends ViewModel {
         }
     }
 
-    public List<Crime> getCrimeList() {
-        return mCrimeLab.getCrimeList();
+    public int getCrimesCount() {
+        return mCrimeLab.getCrimeList().size();
     }
 
     public Crime getCrime(UUID id) {

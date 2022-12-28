@@ -8,6 +8,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.widget.ImageButton;
 
 import com.bignerdranch.android.criminalintent.data.CrimeLab;
@@ -36,6 +37,7 @@ public class CrimePagerActivity extends AppCompatActivity {
 
             enableButtons(position);
         }
+
     }
 
     private final OnPageChangeCallback pagerCallback = new OnPageChangeCallback();
@@ -90,12 +92,12 @@ public class CrimePagerActivity extends AppCompatActivity {
         mButtonArrowEnd = findViewById(R.id.imageButtonEnd);
 
         mButtonArrowStart.setOnClickListener(v -> mViewPagerCrimes.setCurrentItem(0, false));
-        mButtonArrowEnd.setOnClickListener(v -> mViewPagerCrimes.setCurrentItem(mViewModel.getCrimeList().size() - 1,false));
+        mButtonArrowEnd.setOnClickListener(v -> mViewPagerCrimes.setCurrentItem(mViewModel.getCrimesCount() - 1,false));
     }
 
     private void enableButtons(int itemPos) {
         mButtonArrowStart.setEnabled(itemPos > 0);
-        mButtonArrowEnd.setEnabled(itemPos < mViewModel.getCrimeList().size() - 1);
+        mButtonArrowEnd.setEnabled(itemPos < mViewModel.getCrimesCount() - 1);
     }
 
     @Override
@@ -104,7 +106,7 @@ public class CrimePagerActivity extends AppCompatActivity {
 
         mViewPagerCrimes.registerOnPageChangeCallback(pagerCallback);
     }
-
+;
     @Override
     protected void onPause() {
         super.onPause();
@@ -121,5 +123,12 @@ public class CrimePagerActivity extends AppCompatActivity {
         }
 
         mViewPagerCrimes.unregisterOnPageChangeCallback(pagerCallback);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_crime_pager, menu);
+
+        return super.onCreateOptionsMenu(menu);
     }
 }

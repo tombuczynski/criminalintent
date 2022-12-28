@@ -169,7 +169,7 @@ public class CrimeRecyclerViewAdapter extends RecyclerView.Adapter<CrimeRecycler
     */
    @Override
    public void onBindViewHolder(@NonNull ViewHolderCrime holder, int position) {
-      holder.bind(mViewModel.getCrimeList().get(position));
+      holder.bind(mViewModel.getCrime(position));
    }
 
    /**
@@ -186,7 +186,7 @@ public class CrimeRecyclerViewAdapter extends RecyclerView.Adapter<CrimeRecycler
     */
    @Override
    public int getItemViewType(int position) {
-      return mViewModel.getCrimeList().get(position).isRequiresPolice() ? R.layout.list_item_crime_police : R.layout.list_item_crime;
+      return mViewModel.getCrime(position).isRequiresPolice() ? R.layout.list_item_crime_police : R.layout.list_item_crime;
    }
 
    /**
@@ -196,6 +196,6 @@ public class CrimeRecyclerViewAdapter extends RecyclerView.Adapter<CrimeRecycler
     */
    @Override
    public int getItemCount() {
-      return mViewModel.getCrimeList().size();
+      return mViewModel.getCrimesCount();
    }
 }

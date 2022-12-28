@@ -176,7 +176,7 @@ public class CrimeListFragment extends Fragment {
     }
 
     private void updateButtonNewCrime() {
-        mButtonNewCrime.setVisibility(mViewModel.getCrimeList().size() == 0 ? View.VISIBLE : View.GONE);
+        mButtonNewCrime.setVisibility(mViewModel.getCrimesCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
     public void notifyItemChanged(int itemPos) {
@@ -195,10 +195,10 @@ public class CrimeListFragment extends Fragment {
         updateButtonNewCrime();
     }
 
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_crime_list, menu);
-    }
+//    @Override
+//    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+//        inflater.inflate(R.menu.menu_crime_list, menu);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -206,8 +206,6 @@ public class CrimeListFragment extends Fragment {
 
         if (menuItemId == R.id.menu_new_crime) {
             newCrime();
-
-            //mRecViewAdapter.notifyDataSetChanged();
 
             return true;
         }

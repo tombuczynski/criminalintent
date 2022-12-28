@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -90,7 +91,7 @@ public class CrimeListActivity extends FragmentContainerActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_crime_list_main, menu);
+        getMenuInflater().inflate(R.menu.menu_crime_list, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -101,6 +102,12 @@ public class CrimeListActivity extends FragmentContainerActivity {
 
         if (mi != null) {
             mi.setTitle(mShowQuantity ? R.string.hide_quantity : R.string.show_quantity);
+        }
+
+        mi = menu.findItem(R.id.menu_remove_crime);
+        if (mi !=null) {
+            int selPos = getSelectedItemPos();
+            mi.setVisible(mIsDualPanel && selPos >= 0);
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -118,9 +125,15 @@ public class CrimeListActivity extends FragmentContainerActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @NonNull
+    private Integer getSelectedItemPos() {
+        return Objects.requireNonNull(mViewModel.getSelectedItemPos().getValue());
+    }
+
     private void onSelItemChanged(Integer itemPos) {
         if (mIsDualPanel) {
             showCrimeDetails(itemPos);
+            invalidateOptionsMenu();
         } else if (itemPos >= 0) {
             if (itemPos == mViewModel.getActivatedItemPos()) {
                 startCrimeActivity(itemPos);
@@ -172,7 +185,7 @@ public class CrimeListActivity extends FragmentContainerActivity {
                 switch (item.getValue()) {
                     case CHANGED:
                         f.notifyItemChanged(itemPos);
-                        mViewModel.getCrimeList().get(itemPos).clearModified();
+                        mViewModel.getCrime(itemPos).clearModified();
                         if (mIsDualPanel) {
                             mItemsToSave.add(id);
                         }
@@ -203,7 +216,7 @@ public class CrimeListActivity extends FragmentContainerActivity {
         if(!mShowQuantity) {
             bar.setSubtitle(null);
         } else {
-            int quantity = mViewModel.getCrimeList().size();
+            int quantity = mViewModel.getCrimesCount();
             bar.setSubtitle(getResources().getQuantityString(R.plurals.crime_quantity, quantity,quantity));
         }
     }
