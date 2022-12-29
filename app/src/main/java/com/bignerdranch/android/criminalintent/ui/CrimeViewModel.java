@@ -111,7 +111,8 @@ public class CrimeViewModel extends ViewModel {
     public void updateCrime(UUID id) {
         Crime crime = mCrimeLab.getCrime(id);
 
-        mCrimeLab.update(crime);
+        if (crime != null)
+            mCrimeLab.update(crime);
     }
 
     public void updateCrime(int itemPos) {
