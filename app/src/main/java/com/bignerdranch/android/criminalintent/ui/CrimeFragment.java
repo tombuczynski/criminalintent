@@ -86,6 +86,7 @@ public class CrimeFragment extends Fragment implements LoaderManager.LoaderCallb
 
     private final ActivityResultLauncher<Uri> mTakePhoto = registerForActivityResult(new TakePicture(), result -> {
         if (result) {
+            requireView().announceForAccessibility(getString(R.string.photo_taken));
             updatePhotoView();
         }
     });

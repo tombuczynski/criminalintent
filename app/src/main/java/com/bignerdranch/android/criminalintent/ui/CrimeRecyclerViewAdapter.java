@@ -1,5 +1,6 @@
 package com.bignerdranch.android.criminalintent.ui;
 
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,9 @@ import com.bignerdranch.android.criminalintent.ui.selection.CrimeDetails;
 
 import java.text.DateFormat;
 import java.util.Objects;
-import java.util.UUID;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.selection.ItemDetailsLookup;
-import androidx.recyclerview.selection.Selection;
 import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -60,6 +59,19 @@ public class CrimeRecyclerViewAdapter extends RecyclerView.Adapter<CrimeRecycler
                itemView.setActivated(selPos == getAdapterPosition());
             }
          }
+
+         itemView.setContentDescription(createShortReport(crime));
+      }
+
+      @NonNull
+      private String createShortReport(@NonNull Crime crime) {
+         Resources res = itemView.getResources();
+         String solved = res.getString(crime.isSolved() ? R.string.solved : R.string.not_solved);
+         String date = mtextViewDateTime.getText().toString();
+         String suspect = crime.getSuspect();
+         suspect = suspect != null ? suspect : res.getString(R.string.lack);
+
+         return res.getString(R.string.report_text_short, crime.getTitle(), date, solved, suspect);
       }
 
       protected void showToast(CharSequence msg) {

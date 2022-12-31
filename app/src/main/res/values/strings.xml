@@ -16,6 +16,7 @@
     <string name="choose_suspect">Identify the suspect</string>
     <string name="send_report">Send report</string>
     <string name="report_text">%s: disclosed on %s, case %s, identified suspect: %s</string>
+    <string name="report_text_short">%s, %s, case %s, suspect %s</string>
     <string name="solved">solved</string>
     <string name="not_solved">in progress</string>
     <string name="report_title">CriminalIntent - crime report</string>
@@ -28,7 +29,9 @@
     <string name="read_contact_permission_explain">You must give permission to read the contact\'s phone number</string>
     <string name="take_photo">Take a photo</string>
     <string name="photo">Photo</string>
+    <string name="photo_close">Photo, activate to close</string>
     <string name="select_from_list">Select a case from the list</string>
+    <string name="photo_taken">Photo taken</string>
 
     <plurals name="crime_quantity">
         <item quantity="one">%d crime</item>

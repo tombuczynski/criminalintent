@@ -16,6 +16,7 @@
     <string name="choose_suspect">Wskaż podejrzanego</string>
     <string name="send_report">Wyślij raport</string>
     <string name="report_text">%s: ujawnione w dniu %s, sprawa %s, wskazany sprawca: %s</string>
+    <string name="report_text_short">%s, %s, sprawa %s, sprawca %s</string>
     <string name="solved">rozwiązana</string>
     <string name="not_solved">w toku</string>
     <string name="report_title">CriminalIntent - raport z przestępstwa</string>
@@ -28,6 +29,7 @@
     <string name="read_contact_permission_explain">Konieczne uprawnienie do odczytu numeru telefonu z kontaktu</string>
     <string name="take_photo">Zrób zdjęcie</string>
     <string name="photo">Fotografia</string>
+    <string name="photo_close">Fotografia, uaktywnij by zamknąć</string>
     <string name="select_from_list">Wybierz sprawę z listy</string>
 
     <plurals name="crime_quantity">
@@ -35,4 +37,5 @@
         <item quantity="few">%d przestępstwa</item>
         <item quantity="many">%d przestępstw</item>
     </plurals>
+    <string name="photo_taken">Zdjęcie wykonane</string>
 </resources>
