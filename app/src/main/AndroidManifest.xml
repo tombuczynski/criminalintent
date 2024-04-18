@@ -66,7 +66,6 @@
             <!-- <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".CrimeListActivity"/> -->
         </activity>
 
-        android:localeConfig="@xml/locales_config"
     </application>
 
 </manifest>
